@@ -112,10 +112,10 @@ namespace CE.iPhone.PList.Internal {
         /// <summary>
         /// Performs an implicit conversion from <see cref="CE.iPhone.PList.PListElement&lt;T&gt;"/> to <see cref="T"/>.
         /// </summary>
-        /// <param name="elem">The elem.</param>
+        /// <param name="element">The elem.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator T(PListElement<T> elem) {
-            return elem.Value;
+        public static implicit operator T(PListElement<T> element) {
+            return element.Value;
         }
 
         /// <summary>

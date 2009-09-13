@@ -73,7 +73,7 @@ namespace CE.iPhone.PList.Internal {
             Byte[] header = new Byte[32];
             BaseStream.Seek(-32, SeekOrigin.End);
             if (BaseStream.Read(header, 0, header.Length) != header.Length)
-                Debug.Assert(false, "Invalid Header Size");
+                throw new PListFormatException("Invalid Header Size");
 
             Byte offsetSize = header[6];
             ElementIdxSize = header[7];
@@ -84,7 +84,7 @@ namespace CE.iPhone.PList.Internal {
             Byte[] offsetTableBuf = new Byte[elementCnt * offsetSize];
             BaseStream.Seek(offsetTableOffset, SeekOrigin.Begin);
             if (BaseStream.Read(offsetTableBuf, 0, offsetTableBuf.Length) != offsetTableBuf.Length)
-                Debug.Assert(false, "Invalid rawOffsetTable Size");
+                throw new PListFormatException("Invalid offsetTable Size");
 
             m_Offsets = new Int32[elementCnt];
             for (int i = 0; i < m_Offsets.Length; i++) {
@@ -127,16 +127,16 @@ namespace CE.iPhone.PList.Internal {
         /// <returns>The <see cref="T:CE.iPhone.IPListElemnet"/> at the current stream position.</returns>
         internal IPListElement ReadInternal() {
             Byte[] buf = new Byte[1];
-            if (BaseStream.Read(buf, 0, buf.Length) != 1) {
-                Debug.Assert(false, "Didn't read type Byte");
-            }
+            if (BaseStream.Read(buf, 0, buf.Length) != 1)
+                throw new PListFormatException("Didn't read type Byte");
 
             Int32 objLen = buf[0] & 0x0F;
             Byte typeCode = (Byte)((buf[0] >> 4) & 0x0F);
 
             if (typeCode != 0 && objLen == 0x0F) {
                 IPListElement lenElem = ReadInternal();
-                Debug.Assert(lenElem is PListInteger, "Element Len is no Integer");
+                if (!(lenElem is PListInteger))
+                    throw new PListFormatException("Element Len is no Integer");
                 objLen = (Int32)((PListInteger)lenElem).Value;
             }
 

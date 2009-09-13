@@ -137,7 +137,9 @@ namespace CE.iPhone.PList {
         public override void ReadBinary(PListBinaryReader reader) {
 
             Byte[] buf = new Byte[reader.CurrentElementLength * (reader.CurrentElementTypeCode == 5 ? 1 : 2)];
-            Debug.Assert(reader.BaseStream.Read(buf, 0, buf.Length) == buf.Length);
+            if (reader.BaseStream.Read(buf, 0, buf.Length) != buf.Length)
+                throw new PListFormatException();
+
 
             Encoding enc = reader.CurrentElementTypeCode == 5 ? Encoding.UTF8 : Encoding.BigEndianUnicode;
 

@@ -100,14 +100,16 @@ namespace CE.iPhone.PList {
         /// <remarks>Provided for internal use only.</remarks>
         public override void ReadBinary(PListBinaryReader reader) {
             Byte[] buf = new Byte[1 << (int)reader.CurrentElementLength];
-            Debug.Assert(reader.BaseStream.Read(buf, 0, buf.Length) == buf.Length);
+            if(reader.BaseStream.Read(buf, 0, buf.Length) != buf.Length)
+                throw new PListFormatException();
+
 
             switch (reader.CurrentElementLength) {
-                case 0: Debug.Assert(false, "Real < 32Bit"); break;
-                case 1: Debug.Assert(false, "Real < 32Bit"); break;
+                case 0: throw new PListFormatException("Real < 32Bit");
+                case 1: throw new PListFormatException("Real < 32Bit");
                 case 2: Value = BitConverter.ToSingle(buf.Reverse().ToArray(), 0); break;
                 case 3: Value = BitConverter.ToDouble(buf.Reverse().ToArray(), 0); break;
-                default: Debug.Assert(false, "Real > 64Bit"); break;
+                default: throw new PListFormatException("Real > 64Bit");
             }
         }
 

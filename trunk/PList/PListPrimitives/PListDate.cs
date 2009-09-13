@@ -102,14 +102,16 @@ namespace CE.iPhone.PList {
             Debug.WriteLine("Unverified", "WARNING");
 
             Byte[] buf = new Byte[1 << (int)reader.CurrentElementLength];
-            Debug.Assert(reader.BaseStream.Read(buf, 0, buf.Length) == buf.Length);
+            if (reader.BaseStream.Read(buf, 0, buf.Length) != buf.Length)
+                throw new PListFormatException();
+
             double ticks = -1;
             switch (reader.CurrentElementLength) {
-                case 0: Debug.Assert(false, "Date < 32Bit"); break;
-                case 1: Debug.Assert(false, "Date < 32Bit"); break;
+                case 0: throw new PListFormatException("Date < 32Bit");
+                case 1: throw new PListFormatException("Date < 32Bit");
                 case 2: ticks = BitConverter.ToSingle(buf.Reverse().ToArray(), 0); break;
                 case 3: ticks = BitConverter.ToDouble(buf.Reverse().ToArray(), 0); break;
-                default: Debug.Assert(false, "Real > 64Bit"); break;
+                default: throw new PListFormatException("Date > 64Bit");
             }
 
             Value = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(ticks);

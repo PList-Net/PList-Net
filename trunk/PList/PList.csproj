@@ -53,6 +53,8 @@
     <Compile Include="PListContainer\PListDict.cs" />
     <Compile Include="PListElement.cs" />
     <Compile Include="PListElementFactory.cs" />
+    <Compile Include="PListExceptions\PListException.cs" />
+    <Compile Include="PListExceptions\PListFormatException.cs" />
     <Compile Include="PListFormat.cs" />
     <Compile Include="PListPrimitives\PListBool.cs" />
     <Compile Include="PListPrimitives\PListData.cs" />

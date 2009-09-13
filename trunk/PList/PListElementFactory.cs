@@ -112,11 +112,8 @@ namespace CE.iPhone.PList.Internal {
 
             if (m_PListElementTypeCodes.ContainsKey(typeCode))
                 return (IPListElement)Activator.CreateInstance(m_PListElementTypeCodes[typeCode]);            
-            else {
-                Debug.Assert(false, "Unknown PList - Tag");
-                return null;
-            
-            }
+            else
+                throw new PListFormatException("Unknown PList - TypeCode");
         }
 
         /// <summary>        
@@ -126,12 +123,9 @@ namespace CE.iPhone.PList.Internal {
         /// <returns>The created <see cref="T:CE.iPhone.IPListElement"/> object</returns>
         public IPListElement Create(String tag) {
             if (m_PListElementTags.ContainsKey(tag))
-                return (IPListElement)Activator.CreateInstance(m_PListElementTags[tag]);
-            else {
-                Debug.Assert(false, "Unknown PList - Tag");
-                return null;
-            
-            }
+                return (IPListElement)Activator.CreateInstance(m_PListElementTags[tag]);  
+            else
+                throw new PListFormatException("Unknown PList - Tag");
         }
 
         /// <summary>
