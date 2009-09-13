@@ -70,7 +70,8 @@ namespace CE.iPhone.PList {
         /// <remarks>Provided for internal use only.</remarks>
         public void ReadBinary(PListBinaryReader reader) {
             Byte[] buf = new Byte[reader.CurrentElementLength * reader.ElementIdxSize];
-            Debug.Assert(reader.BaseStream.Read(buf, 0, buf.Length) == buf.Length);
+            if(reader.BaseStream.Read(buf, 0, buf.Length) != buf.Length)
+                throw new PListFormatException();
 
             for (int i = 0; i < reader.CurrentElementLength; i++) {
                 Add(reader.ReadInternal(reader.ElementIdxSize == 1 ? 

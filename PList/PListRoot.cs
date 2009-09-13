@@ -59,10 +59,10 @@ namespace CE.iPhone.PList {
         /// <summary>
         /// Loads the PList from specified file.
         /// </summary>
-        /// <param name="filename">The path of the PList.</param>
+        /// <param name="fileName">The path of the PList.</param>
         /// <returns>A <see cref="PListRoot"/> object loaded from the file</returns>
-        public static PListRoot Load(String filename) {
-            using (FileStream fs = new FileStream(filename, FileMode.Open)) {
+        public static PListRoot Load(String fileName) {
+            using (FileStream fs = new FileStream(fileName, FileMode.Open)) {
                 return Load(fs);
             }
         }
@@ -76,10 +76,10 @@ namespace CE.iPhone.PList {
         private static PListRoot Load(Stream stream) {
             PListRoot root= null;
             XmlSerializer ser = new XmlSerializer(typeof(PListRoot));
-            Byte[] buf = new Byte[20];
+            Byte[] buf = new Byte[8];
             stream.Read(buf, 0, buf.Length);
             stream.Seek(0, SeekOrigin.Begin);
-            if (Encoding.Default.GetString(buf).StartsWith("bplist")) {
+            if (Encoding.Default.GetString(buf) == "bplist00") {
                 PListBinaryReader reader = new PListBinaryReader();
                 root = new PListRoot();
                 root.Format = PListFormat.Binary;
@@ -95,10 +95,10 @@ namespace CE.iPhone.PList {
         /// <summary>
         /// Saves the PList to the specified path.
         /// </summary>
-        /// <param name="filename">The path of the PList.</param>
+        /// <param name="fileName">The path of the PList.</param>
         /// <param name="format">The format of the PList (Binary/Xml).</param>
-        public void Save(String filename, PListFormat format){
-            using (FileStream fs = new FileStream(filename, FileMode.Create)) {
+        public void Save(String fileName, PListFormat format){
+            using (FileStream fs = new FileStream(fileName, FileMode.Create)) {
                 Save(fs, format);                
             }
         }
@@ -106,9 +106,9 @@ namespace CE.iPhone.PList {
         /// <summary>
         /// Saves the PList to the specified path.
         /// </summary>
-        /// <param name="filename">The path of the PList.</param>
-        public void Save(String filename) {
-            Save(filename, Format);
+        /// <param name="fileName">The path of the PList.</param>
+        public void Save(String fileName) {
+            Save(fileName, Format);
         }
 
         /// <summary>

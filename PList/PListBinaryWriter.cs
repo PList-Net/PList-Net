@@ -133,9 +133,7 @@ namespace CE.iPhone.PList.Internal {
                 case 2: res = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((Int16)idx)); break;
                 case 4: res = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((Int32)idx)); break;
                 default:
-                    res = null;
-                    Debug.Assert(false, "Invalid ElementIdxSize");
-                    break;
+                    throw new PListFormatException("Invalid ElementIdxSize");
             }
             return res;
         }

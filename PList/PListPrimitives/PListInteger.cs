@@ -101,15 +101,16 @@ namespace CE.iPhone.PList {
         public override void ReadBinary(PListBinaryReader reader) {
 
             Byte[] buf = new Byte[1 << (int)reader.CurrentElementLength];
-            Debug.Assert(reader.BaseStream.Read(buf, 0, buf.Length) == buf.Length);
+            if (reader.BaseStream.Read(buf, 0, buf.Length) != buf.Length)
+                throw new PListFormatException();
+
 
             switch (reader.CurrentElementLength) {
                 case 0: Value = buf[0]; break;
                 case 1: Value = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(buf, 0)); break;
                 case 2: Value = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(buf, 0)); break;
                 case 3: Value = IPAddress.NetworkToHostOrder(BitConverter.ToInt64(buf, 0)); break;
-                default: Debug.Assert(false, "Int > 64Bit");
-                    break;
+                default: throw new PListFormatException("Int > 64Bit");
             }
         }
 

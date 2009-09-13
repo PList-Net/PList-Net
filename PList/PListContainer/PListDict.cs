@@ -73,16 +73,18 @@ namespace CE.iPhone.PList {
         public void ReadBinary(PListBinaryReader reader) {
             Byte[] bufKeys = new Byte[reader.CurrentElementLength * reader.ElementIdxSize];
             Byte[] bufVals = new Byte[reader.CurrentElementLength * reader.ElementIdxSize];
-            Debug.Assert(reader.BaseStream.Read(bufKeys, 0, bufKeys.Length) == bufKeys.Length);
-            Debug.Assert(reader.BaseStream.Read(bufVals, 0, bufVals.Length) == bufVals.Length);
+            if (reader.BaseStream.Read(bufKeys, 0, bufKeys.Length) != bufKeys.Length)
+                throw new PListFormatException();
 
-            
+            if (reader.BaseStream.Read(bufVals, 0, bufVals.Length) != bufVals.Length)
+                throw new PListFormatException();
 
             for (int i = 0; i < reader.CurrentElementLength; i++) {
                 IPListElement plKey = reader.ReadInternal(reader.ElementIdxSize == 1 ?
                     bufKeys[i] : IPAddress.NetworkToHostOrder(BitConverter.ToInt16(bufKeys, 2 * i)));
 
-                Debug.Assert(plKey is PListString, "Key is no String");
+                if(!(plKey is PListString))
+                    throw new PListFormatException("Key is no String");
 
                 IPListElement plVal = reader.ReadInternal(reader.ElementIdxSize == 1 ?
                     bufVals[i] : IPAddress.NetworkToHostOrder(BitConverter.ToInt16(bufVals, 2 * i)));

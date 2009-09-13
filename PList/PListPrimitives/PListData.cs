@@ -98,7 +98,8 @@ namespace CE.iPhone.PList {
         /// <remarks>Provided for internal use only.</remarks>
         public override void ReadBinary(PListBinaryReader reader) {
             Value = new Byte[reader.CurrentElementLength];
-            Debug.Assert(reader.BaseStream.Read(Value, 0, Value.Length) == Value.Length);
+            if (reader.BaseStream.Read(Value, 0, Value.Length) != Value.Length)
+                throw new PListFormatException();
         }
 
         /// <summary>

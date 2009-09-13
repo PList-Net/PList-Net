@@ -65,7 +65,8 @@ namespace CE.iPhone.PList {
         /// <param name="reader">The <see cref="T:CE.iPhone.PListBinaryReader"/> from which the element is read.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public void ReadBinary(PListBinaryReader reader) {
-            Debug.Assert(reader.CurrentElementLength == 0x0F);
+            if (reader.CurrentElementLength != 0x0F)
+                throw new PListFormatException();
         }
 
         /// <summary>
