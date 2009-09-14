@@ -66,6 +66,14 @@ namespace CE.iPhone.PList {
         public Byte TypeCode { get { return 0x0D; } }
 
         /// <summary>
+        /// Gets a value indicating whether this instance is written only once in binary mode.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> this instance is written only once in binary mode; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsBinaryUnique { get { return false; } }
+
+        /// <summary>
         /// Reads this element binary from the reader.
         /// </summary>
         /// <param name="reader">The <see cref="T:CE.iPhone.PListBinaryReader"/> from which the element is read.</param>
@@ -191,6 +199,7 @@ namespace CE.iPhone.PList {
         /// <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which the object is serialized.</param>
         public void WriteXml(XmlWriter writer) {
             writer.WriteStartElement(Tag);
+
             foreach (var key in this.Keys) {
                 writer.WriteStartElement("key");
                 writer.WriteValue(key);
@@ -202,5 +211,97 @@ namespace CE.iPhone.PList {
         }
 
         #endregion
+
+        //#region IDictionary<string,IPListElement> Members
+
+        //private SortedDictionary<string, int> m_KeyMapping = new SortedDictionary<string, int>();
+        //private Dictionary<string, IPListElement> m_InternalDict = new Dictionary<string, IPListElement>();
+
+        //public void Add(string key, IPListElement value, int idx) {
+        //    m_InternalDict.Add(key, value);
+        //    m_KeyMapping.Add(key, idx);
+        //}
+
+        //public void Add(string key, IPListElement value) {
+        //    m_InternalDict.Add(key, value);
+        //    m_KeyMapping.Add(key, m_KeyMapping.Values.Max() + 1);
+        //}
+
+        //public bool ContainsKey(string key) {
+        //    return m_InternalDict.ContainsKey(key);
+        //}
+
+        //public ICollection<string> Keys {
+        //    get { return m_InternalDict.Keys; }
+        //}
+
+        //public bool Remove(string key) {
+        //    m_KeyMapping.Remove(key);
+        //    return m_InternalDict.Remove(key);
+        //}
+
+        //public bool TryGetValue(string key, out IPListElement value) {
+        //    return m_InternalDict.TryGetValue(key, out value);
+        //}
+
+        //public ICollection<IPListElement> Values {
+        //    get { return m_InternalDict.Values; }
+        //}
+
+        //public IPListElement this[string key] {
+        //    get { return m_InternalDict[key]; }
+        //    set { m_InternalDict[key] = value; }
+        //}
+
+        //#endregion
+
+        //#region ICollection<KeyValuePair<string,IPListElement>> Members
+
+        //public void Add(KeyValuePair<string, IPListElement> item) {
+        //    Add(item.Key, item.Value);
+        //}
+
+        //public void Clear() {
+        //    m_InternalDict.Clear();
+        //    m_KeyMapping.Clear();
+        //}
+
+        //public bool Contains(KeyValuePair<string, IPListElement> item) {
+        //    return m_InternalDict.Contains(item);
+        //}
+
+        //public void CopyTo(KeyValuePair<string, IPListElement>[] array, int arrayIndex) {
+        //    ((ICollection<KeyValuePair<string, IPListElement>>)m_InternalDict).CopyTo(array, arrayIndex);
+        //}
+
+        //public int Count {
+        //    get { return m_InternalDict.Count; }
+        //}
+
+        //public bool IsReadOnly {
+        //    get { return ((ICollection<KeyValuePair<string, IPListElement>>)m_InternalDict).IsReadOnly; }
+        //}
+
+        //public bool Remove(KeyValuePair<string, IPListElement> item) {
+        //    return ((ICollection<KeyValuePair<string, IPListElement>>)m_InternalDict).Remove(item);
+        //}
+
+        //#endregion
+
+        //#region IEnumerable<KeyValuePair<string,IPListElement>> Members
+
+        //public IEnumerator<KeyValuePair<string, IPListElement>> GetEnumerator() {
+        //    return m_InternalDict.GetEnumerator();
+        //}
+
+        //#endregion
+
+        //#region IEnumerable Members
+
+        //System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+        //    return ((System.Collections.IEnumerable)m_InternalDict).GetEnumerator();
+        //}
+
+        //#endregion
     }
 }

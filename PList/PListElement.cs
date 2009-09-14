@@ -43,7 +43,7 @@ namespace CE.iPhone.PList.Internal {
     /// An abstract base class for primitive PList types
     /// </summary>
     /// <typeparam name="T">The .Net equivalent to the PList type</typeparam>
-    public abstract class PListElement<T> : IPListElement {
+    public abstract class PListElement<T> : IPListElement, IEquatable<IPListElement> {
 
         /// <summary>
         /// Gets the Xml tag of this element.
@@ -56,6 +56,14 @@ namespace CE.iPhone.PList.Internal {
         /// </summary>
         /// <value>The binary typecode of this element.</value>
         public abstract Byte TypeCode { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is written only once in binary mode.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> this instance is written only once in binary mode; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool IsBinaryUnique { get { return true; } }
 
         /// <summary>
         /// Gets or sets the value of this element.
@@ -159,5 +167,28 @@ namespace CE.iPhone.PList.Internal {
         /// <param name="writer">The <see cref="T:CE.iPhone.PListBinaryWriter"/> to which the element is written.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public abstract void WriteBinary(PListBinaryWriter writer);
+
+        #region IEquatable<PListString> Members
+
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>
+        /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+        /// </returns>
+        public bool Equals(IPListElement other) {
+            return (other is PListElement<T>) && (Value.Equals(((PListElement<T>)other).Value));
+        }
+
+        public override bool Equals(object obj) {
+            if (!(obj is IPListElement)) return false;
+            return Equals((IPListElement)obj);
+        }
+
+        public override int GetHashCode() {
+            return Value.GetHashCode();
+        }
+        #endregion
     }
 }

@@ -58,6 +58,14 @@ namespace CE.iPhone.PList {
         public override Byte TypeCode { get { return 0; } }
 
         /// <summary>
+        /// Gets a value indicating whether this instance is written only once in binary mode.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> this instance is written only once in binary mode; otherwise, <c>false</c>.
+        /// </value>
+        public override bool IsBinaryUnique { get { return true; } }
+
+        /// <summary>
         /// Gets or sets the value of this element.
         /// </summary>
         /// <value>The value of this element.</value>

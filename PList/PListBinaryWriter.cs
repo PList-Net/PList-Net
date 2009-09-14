@@ -51,6 +51,8 @@ namespace CE.iPhone.PList.Internal {
         private static readonly Byte[] s_PListHeader = new Byte[] {
             0x62, 0x70, 0x6c, 0x69, 0x73, 0x74, 0x30, 0x30};
 
+        private Dictionary<Byte, Dictionary<IPListElement, int>> m_UniqueElements = new Dictionary<Byte, Dictionary<IPListElement, int>>();
+
         /// <summary>
         /// Gets the basestream.
         /// </summary>
@@ -79,7 +81,7 @@ namespace CE.iPhone.PList.Internal {
         /// </summary>
         /// <param name="stream">The stream.</param>
         /// <param name="element">The element.</param>
-        public void Writer(Stream stream, IPListElement element) {
+        public void Write(Stream stream, IPListElement element) {
             BaseStream = stream;
             Offsets = new List<int>();
             BaseStream.Write(s_PListHeader, 0, s_PListHeader.Length);
@@ -89,6 +91,8 @@ namespace CE.iPhone.PList.Internal {
             else ElementIdxSize = sizeof(Int32);
 
             int topOffestIdx = WriteInternal(element);
+            elemCnt = Offsets.Count;
+            
             int offsetTableOffset = (int)BaseStream.Position;
 
 
@@ -144,9 +148,18 @@ namespace CE.iPhone.PList.Internal {
         /// <param name="element">The element.</param>
         /// <returns>The Inx of the written element</returns>
         internal int WriteInternal(IPListElement element) {
+            int elementIdx = Offsets.Count;
+            if (element.IsBinaryUnique && element is IEquatable<IPListElement>) {
+                if (!m_UniqueElements.ContainsKey(element.TypeCode)) m_UniqueElements.Add(element.TypeCode, new Dictionary<IPListElement, int>());
+                if (!m_UniqueElements[element.TypeCode].ContainsKey(element)) m_UniqueElements[element.TypeCode][element] = elementIdx;
+                else {
+                    if (element is PListBool) elementIdx = m_UniqueElements[element.TypeCode][element];
+                    else return m_UniqueElements[element.TypeCode][element];
+                }
+            }
+
             int offset = (int)BaseStream.Position;
             Offsets.Add(offset);
-            int elementIdx = Offsets.Count;
             int len = element.GetPListElementLength();
             Byte typeCode = (Byte)(element.TypeCode << 4 | (len < 0x0F ? len : 0x0F));
             BaseStream.WriteByte(typeCode);
@@ -157,7 +170,7 @@ namespace CE.iPhone.PList.Internal {
                 extLen.WriteBinary(this);
             }
             element.WriteBinary(this);
-            return elementIdx-1;
+            return elementIdx;
         }
     }
 }

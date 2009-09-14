@@ -73,7 +73,7 @@ namespace CE.iPhone.PList {
         /// Gets the Xml tag of this element.
         /// </summary>
         /// <value>The Xml tag of this element.</value>
-        public override String Tag { get { return m_IsUTF16 ? "ustring" : "String"; } }
+        public override String Tag { get { return m_IsUTF16 ? "ustring" : "string"; } }
 
         /// <summary>
         /// Gets the binary typecode of this element.
@@ -165,5 +165,7 @@ namespace CE.iPhone.PList {
             Byte[] buf = enc.GetBytes(Value);
             writer.BaseStream.Write(buf, 0, buf.Length);
         }
+
+
     }
 }
