@@ -141,7 +141,7 @@ namespace CE.iPhone.PList {
                 xmlWriter.Flush();
             } else {
                 PListBinaryWriter writer = new PListBinaryWriter();
-                writer.Writer(stream, Root);
+                writer.Write(stream, Root);
             }
         }
 

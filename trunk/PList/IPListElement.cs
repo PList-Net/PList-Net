@@ -71,6 +71,14 @@ namespace CE.iPhone.PList {
         int GetPListElementCount();
 
         /// <summary>
+        /// Gets a value indicating whether this instance is written only once in binary mode.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> this instance is written only once in binary mode; otherwise, <c>false</c>.
+        /// </value>
+        bool IsBinaryUnique { get; }
+
+        /// <summary>
         /// Writes this element binary to the writer.
         /// </summary>
         /// <param name="writer">The <see cref="T:CE.iPhone.PListBinaryWriter"/> to which the element is written.</param>

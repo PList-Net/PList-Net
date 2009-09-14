@@ -60,6 +60,14 @@ namespace CE.iPhone.PList {
         public Byte TypeCode { get { return 0; } }
 
         /// <summary>
+        /// Gets a value indicating whether this instance is written only once in binary mode.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> this instance is written only once in binary mode; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsBinaryUnique { get { return false; } }
+
+        /// <summary>
         /// Reads this element binary from the reader.
         /// </summary>
         /// <param name="reader">The <see cref="T:CE.iPhone.PListBinaryReader"/> from which the element is read.</param>

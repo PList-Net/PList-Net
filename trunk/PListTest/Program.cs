@@ -13,8 +13,9 @@ namespace CE.iPhone.PList.Test {
                 root.Save(memStream, PListFormat.Xml);
                 Console.Write(Encoding.UTF8.GetString(memStream.ToArray()));
             }
+            root.Save("com.apple.springboard.XML.plist", PListFormat.Xml);
+            root.Save("com.apple.springboard.BIN.plist", PListFormat.Binary);
 
-            root.Save("com.apple.springboard.bin.plist");
         }
     }
 }
