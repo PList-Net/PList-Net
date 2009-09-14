@@ -70,7 +70,7 @@ namespace CE.iPhone.PList.Internal {
             Register(new PListData());
             Register(new PListDate());
 
-            Register("String", 5, new PListString());
+            Register("string", 5, new PListString());
             Register("ustring", 6, new PListString());
 
             Register("true", 0, new PListBool());
@@ -113,7 +113,7 @@ namespace CE.iPhone.PList.Internal {
             if (m_PListElementTypeCodes.ContainsKey(typeCode))
                 return (IPListElement)Activator.CreateInstance(m_PListElementTypeCodes[typeCode]);            
             else
-                throw new PListFormatException("Unknown PList - TypeCode");
+                throw new PListFormatException(string.Format("Unknown PList - TypeCode ({0})", typeCode));
         }
 
         /// <summary>        
@@ -125,7 +125,7 @@ namespace CE.iPhone.PList.Internal {
             if (m_PListElementTags.ContainsKey(tag))
                 return (IPListElement)Activator.CreateInstance(m_PListElementTags[tag]);  
             else
-                throw new PListFormatException("Unknown PList - Tag");
+                throw new PListFormatException(string.Format("Unknown PList - Tag ({0})", tag));
         }
 
         /// <summary>
