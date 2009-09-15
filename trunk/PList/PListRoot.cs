@@ -73,7 +73,7 @@ namespace CE.iPhone.PList {
         /// </summary>
         /// <param name="stream">The stream containing the PList.</param>
         /// <returns>A <see cref="PListRoot"/> object loaded from the stream</returns>
-        private static PListRoot Load(Stream stream) {
+        public static PListRoot Load(Stream stream) {
             PListRoot root= null;
             XmlSerializer ser = new XmlSerializer(typeof(PListRoot));
             Byte[] buf = new Byte[8];
