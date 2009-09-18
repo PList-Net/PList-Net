@@ -129,7 +129,10 @@ namespace CE.iPhone.PList {
         /// Converts an object into its XML representation.
         /// </summary>
         /// <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which the object is serialized.</param>
-        public void WriteXml(System.Xml.XmlWriter writer) { }
+        public void WriteXml(System.Xml.XmlWriter writer) {
+            writer.WriteStartElement(Tag);
+            writer.WriteEndElement();
+        }
 
         #endregion
 
