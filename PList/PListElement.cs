@@ -118,7 +118,7 @@ namespace CE.iPhone.PList.Internal {
         protected abstract String ToXmlString();
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="CE.iPhone.PList.PListElement&lt;T&gt;"/> to <see cref="T"/>.
+		/// Performs an implicit conversion from <see cref="CE.iPhone.PList.Internal.PListElement&lt;T&gt;"/> to <see cref="T"/>.
         /// </summary>
         /// <param name="element">The elem.</param>
         /// <returns>The result of the conversion.</returns>
@@ -157,14 +157,14 @@ namespace CE.iPhone.PList.Internal {
         /// <summary>
         /// Reads this element binary from the reader.
         /// </summary>
-        /// <param name="reader">The <see cref="T:CE.iPhone.PListBinaryReader"/> from which the element is read.</param>
+        /// <param name="reader">The <see cref="T:CE.iPhone.PList.Internal.PListBinaryReader"/> from which the element is read.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public abstract void ReadBinary(PListBinaryReader reader);
 
         /// <summary>
         /// Writes this element binary to the writer.
         /// </summary>
-        /// <param name="writer">The <see cref="T:CE.iPhone.PListBinaryWriter"/> to which the element is written.</param>
+        /// <param name="writer">The <see cref="T:CE.iPhone.PList.Internal.PListBinaryWriter"/> to which the element is written.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public abstract void WriteBinary(PListBinaryWriter writer);
 

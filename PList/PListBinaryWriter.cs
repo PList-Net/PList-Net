@@ -42,7 +42,7 @@ using System.Net;
 
 namespace CE.iPhone.PList.Internal {
     /// <summary>
-    /// A class, used to write a <see cref="T:CE.iPhone.IPListElemnet"/>  binary formated to a stream
+    /// A class, used to write a <see cref="T:CE.iPhone.PList.IPListElement"/>  binary formated to a stream
     /// </summary>
     public class PListBinaryWriter {
         /// <summary>
@@ -77,7 +77,7 @@ namespace CE.iPhone.PList.Internal {
         internal PListBinaryWriter() { }
 
         /// <summary>
-        /// Writers a <see cref="T:CE.iPhone.IPListElemnet"/> to the specified stream.
+        /// Writers a <see cref="T:CE.iPhone.PList.IPListElement"/> to the specified stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
         /// <param name="element">The element.</param>
@@ -143,7 +143,7 @@ namespace CE.iPhone.PList.Internal {
         }
 
         /// <summary>
-        /// Writers a <see cref="T:CE.iPhone.IPListElemnet"/> to the current stream position
+        /// Writers a <see cref="T:CE.iPhone.PList.IPListElement"/> to the current stream position
         /// </summary>
         /// <param name="element">The element.</param>
         /// <returns>The Inx of the written element</returns>
