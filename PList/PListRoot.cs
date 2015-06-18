@@ -75,7 +75,6 @@ namespace CE.iPhone.PList {
         /// <returns>A <see cref="PListRoot"/> object loaded from the stream</returns>
         public static PListRoot Load(Stream stream) {
             PListRoot root= null;
-            XmlSerializer ser = new XmlSerializer(typeof(PListRoot));
             Byte[] buf = new Byte[8];
             stream.Read(buf, 0, buf.Length);
             stream.Seek(0, SeekOrigin.Begin);
@@ -85,8 +84,15 @@ namespace CE.iPhone.PList {
                 root.Format = PListFormat.Binary;
                 root.Root = reader.Read(stream);
             } else { 
-                root = (PListRoot)ser.Deserialize(stream);
-                root.Format = PListFormat.Xml;
+				// set resolver to null in order to avoid calls to apple.com to resolve DTD
+				var settings = new XmlReaderSettings {
+					XmlResolver = null
+				};
+				using (var reader = XmlReader.Create(stream, settings)) {
+					var serializer = new XmlSerializer(typeof(PListRoot));
+					root = (PListRoot) serializer.Deserialize(reader);
+					root.Format = PListFormat.Xml;
+				}
             }
 
             return root;
