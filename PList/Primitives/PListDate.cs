@@ -1,5 +1,5 @@
 ﻿/* =================================================================================
- * File:   PListInteger.cs
+ * File:   PListBool.cs
  * Author: Christian Ecker
  *
  * Major Changes:
@@ -38,49 +38,49 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using PListNet.Exceptions;
+using PListNet.Internal;
 
-using CE.iPhone.PList.Internal;
-
-namespace CE.iPhone.PList {
+namespace PListNet.Primitives {
     /// <summary>
-    /// Represents a double Value from a PList
+    /// Represents a DateTime Value from a PList
     /// </summary>
-    public class PListReal : PListElement<double> {
+    public class PListDate : PListElement<DateTime> {
         /// <summary>
         /// Gets the Xml tag of this element.
         /// </summary>
         /// <value>The Xml tag of this element.</value>
-        public override String Tag { get { return "real"; } }
+        public override String Tag { get { return "date"; } }
 
         /// <summary>
         /// Gets the binary typecode of this element.
         /// </summary>
         /// <value>The binary typecode of this element.</value>
-        public override Byte TypeCode { get { return 2; } }
+        public override Byte TypeCode { get { return 3; } }
 
         /// <summary>
         /// Gets or sets the value of this element.
         /// </summary>
         /// <value>The value of this element.</value>
-        public override double Value { get; set; }
+        public override DateTime Value { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PListReal"/> class.
+        /// Initializes a new instance of the <see cref="PListDate"/> class.
         /// </summary>
-        public PListReal() { }
+        public PListDate() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PListReal"/> class.
+        /// Initializes a new instance of the <see cref="PListDate"/> class.
         /// </summary>
         /// <param name="value">The value of this element.</param>
-        public PListReal(double value) { Value = value; }
+        public PListDate(DateTime value) { Value = value; }
 
         /// <summary>
         /// Parses the specified value from a given String, read from Xml.
         /// </summary>
         /// <param name="value">The String whis is parsed.</param>
         protected override void Parse(String value) {
-            Value = double.Parse(value, CultureInfo.InvariantCulture);
+            Value = DateTime.Parse(value, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -90,27 +90,31 @@ namespace CE.iPhone.PList {
         /// The XML String representation of the Value.
         /// </returns>
         protected override String ToXmlString() {
-            return Value.ToString(CultureInfo.InvariantCulture);
+            return Value.ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss.ffffffZ");
         }
 
         /// <summary>
         /// Reads this element binary from the reader.
         /// </summary>
-        /// <param name="reader">The <see cref="T:CE.iPhone.PListBinaryReader"/> from which the element is read.</param>
+        /// <param name="reader">The <see cref="T:PListNet.Internal.PListBinaryReader"/> from which the element is read.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public override void ReadBinary(PListBinaryReader reader) {
+            Debug.WriteLine("Unverified", "WARNING");
+
             Byte[] buf = new Byte[1 << (int)reader.CurrentElementLength];
-            if(reader.BaseStream.Read(buf, 0, buf.Length) != buf.Length)
+            if (reader.BaseStream.Read(buf, 0, buf.Length) != buf.Length)
                 throw new PListFormatException();
 
-
+            double ticks = -1;
             switch (reader.CurrentElementLength) {
-                case 0: throw new PListFormatException("Real < 32Bit");
-                case 1: throw new PListFormatException("Real < 32Bit");
-                case 2: Value = BitConverter.ToSingle(buf.Reverse().ToArray(), 0); break;
-                case 3: Value = BitConverter.ToDouble(buf.Reverse().ToArray(), 0); break;
-                default: throw new PListFormatException("Real > 64Bit");
+                case 0: throw new PListFormatException("Date < 32Bit");
+                case 1: throw new PListFormatException("Date < 32Bit");
+                case 2: ticks = BitConverter.ToSingle(buf.Reverse().ToArray(), 0); break;
+                case 3: ticks = BitConverter.ToDouble(buf.Reverse().ToArray(), 0); break;
+                default: throw new PListFormatException("Date > 64Bit");
             }
+
+            Value = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(ticks);
         }
 
         /// <summary>
@@ -125,12 +129,16 @@ namespace CE.iPhone.PList {
         /// <summary>
         /// Writes this element binary to the writer.
         /// </summary>
-        /// <param name="writer">The <see cref="T:CE.iPhone.PListBinaryWriter"/> to which the element is written.</param>
+        /// <param name="writer">The <see cref="T:PListNet.Internal.PListBinaryWriter"/> to which the element is written.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public override void WriteBinary(PListBinaryWriter writer) {
-            Byte[] buf = BitConverter.GetBytes(Value).Reverse().ToArray();
-            writer.BaseStream.Write(buf, 0, buf.Length);
+            Debug.WriteLine("Unverified", "WARNING");
 
+            DateTime start = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+            TimeSpan ts = Value - start;
+            Byte[] buf = BitConverter.GetBytes(ts.TotalSeconds).Reverse().ToArray();
+            writer.BaseStream.Write(buf, 0, buf.Length);
         }
     }
 }

@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CE.iPhone.PList;
 using System.IO;
 
-namespace CE.iPhone.PList.Test {
+namespace PListNet.Test {
     class Program {
         static void Main(string[] args) {
             PListRoot root = PListRoot.Load("com.apple.springboard.plist");

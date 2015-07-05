@@ -42,9 +42,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PList\PList.csproj">
+    <ProjectReference Include="..\PList\PListNet.csproj">
       <Project>{C1154025-FCAB-40AF-A715-91D10420C321}</Project>
-      <Name>PList</Name>
+      <Name>PListNet</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>plist.net</id>
-    <version>1.1</version>
+    <version>2.0</version>
     <title>PList.Net</title>
     <authors>Christian Ecker, Michael Teper</authors>
     <owners>Vijay Santhanam, Christian Ecker, Michael Teper</owners>
@@ -11,5 +11,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>.Net Library for working with Apple *.plist files.</description>
     <tags>Apple PList iPhone iOS iPad OSX Cocoa</tags>
+    <releaseNotes>
+    	Version 2.0 is mainly an internal reorg release. Namespaces have been cleaned
+    	up, references to "iPhone" removed, etc.
+    </releaseNotes>
   </metadata>
 </package>

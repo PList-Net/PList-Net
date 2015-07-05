@@ -38,7 +38,7 @@ using System;
 using System.Xml;
 using System.Xml.Schema;
 
-namespace CE.iPhone.PList.Internal {
+namespace PListNet.Internal {
     /// <summary>
     /// An abstract base class for primitive PList types
     /// </summary>
@@ -118,7 +118,7 @@ namespace CE.iPhone.PList.Internal {
         protected abstract String ToXmlString();
 
         /// <summary>
-		/// Performs an implicit conversion from <see cref="CE.iPhone.PList.Internal.PListElement&lt;T&gt;"/> to <see cref="T"/>.
+		/// Performs an implicit conversion from <see cref="T:PListNet.PListElement&lt;T&gt;"/> to <see cref="T"/>.
         /// </summary>
         /// <param name="element">The elem.</param>
         /// <returns>The result of the conversion.</returns>
@@ -157,14 +157,14 @@ namespace CE.iPhone.PList.Internal {
         /// <summary>
         /// Reads this element binary from the reader.
         /// </summary>
-        /// <param name="reader">The <see cref="T:CE.iPhone.PList.Internal.PListBinaryReader"/> from which the element is read.</param>
+        /// <param name="reader">The <see cref="T:PListNet.Internal.PListBinaryReader"/> from which the element is read.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public abstract void ReadBinary(PListBinaryReader reader);
 
         /// <summary>
         /// Writes this element binary to the writer.
         /// </summary>
-        /// <param name="writer">The <see cref="T:CE.iPhone.PList.Internal.PListBinaryWriter"/> to which the element is written.</param>
+        /// <param name="writer">The <see cref="T:PListNet.Internal.PListBinaryWriter"/> to which the element is written.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public abstract void WriteBinary(PListBinaryWriter writer);
 
@@ -181,11 +181,21 @@ namespace CE.iPhone.PList.Internal {
             return (other is PListElement<T>) && (Value.Equals(((PListElement<T>)other).Value));
         }
 
+		/// <summary>
+		/// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="T:PListNet.Internal.PListElement`1"/>.
+		/// </summary>
+		/// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="T:PListNet.Internal.PListElement`1"/>.</param>
+		/// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to the current
+		/// <see cref="T:PListNet.Internal.PListElement`1"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj) {
             if (!(obj is IPListElement)) return false;
             return Equals((IPListElement)obj);
         }
 
+		/// <summary>
+		/// Serves as a hash function for a <see cref="T:PListNet.Internal.PListElement`1"/> object.
+		/// </summary>
+		/// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a hash table.</returns>
         public override int GetHashCode() {
             return Value.GetHashCode();
         }

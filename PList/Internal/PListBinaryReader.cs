@@ -35,13 +35,14 @@
  * =================================================================================
  */
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
+using PListNet.Exceptions;
+using PListNet.Primitives;
 
-namespace CE.iPhone.PList.Internal {
+namespace PListNet.Internal {
     /// <summary>
-	/// A class, used to read binary formated <see cref="T:CE.iPhone.PList.IPListElement"/> from a stream
+	/// A class, used to read binary formated <see cref="T:PListNet.IPListElement"/> from a stream
     /// </summary>
     public class PListBinaryReader {
         private Int32[] m_Offsets;
@@ -64,10 +65,10 @@ namespace CE.iPhone.PList.Internal {
         internal PListBinaryReader() { }
 
         /// <summary>
-		/// Reads a binary formated <see cref="T:CE.iPhone.PList.IPListElement"/> from the specified stream.
+		/// Reads a binary formated <see cref="T:PListNet.IPListElement"/> from the specified stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
-		/// <returns>The <see cref="T:CE.iPhone.PList.IPListElement"/>, read from the specified stream</returns>
+		/// <returns>The <see cref="T:PListNet.IPListElement"/>, read from the specified stream</returns>
         public IPListElement Read(Stream stream) {
             BaseStream = stream;
             Byte[] header = new Byte[32];
@@ -112,19 +113,19 @@ namespace CE.iPhone.PList.Internal {
         internal Int32 CurrentElementLength { get; private set; }
 
         /// <summary>
-        /// Reads the <see cref="T:CE.iPhone.PList.IPListElement"/> at the specified idx.
+        /// Reads the <see cref="T:PListNet.IPListElement"/> at the specified idx.
         /// </summary>
 		/// <param name="elemIdx">The elem idx.</param>
-		/// <returns>The <see cref="T:CE.iPhone.PList.IPListElement"/> at the specified idx.</returns>
+		/// <returns>The <see cref="T:PListNet.IPListElement"/> at the specified idx.</returns>
         internal IPListElement ReadInternal(int elemIdx) {
             BaseStream.Seek(m_Offsets[elemIdx], SeekOrigin.Begin);
             return ReadInternal();
         }
 
         /// <summary>
-		/// Reads the <see cref="T:CE.iPhone.PList.IPListElement"/> at the current stream position.
+		/// Reads the <see cref="T:PListNet.IPListElement"/> at the current stream position.
         /// </summary>
-		/// <returns>The <see cref="T:CE.iPhone.PList.IPListElement"/> at the current stream position.</returns>
+		/// <returns>The <see cref="T:PListNet.IPListElement"/> at the current stream position.</returns>
         internal IPListElement ReadInternal() {
             Byte[] buf = new Byte[1];
             if (BaseStream.Read(buf, 0, buf.Length) != 1)

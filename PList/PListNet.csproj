@@ -6,7 +6,7 @@
     <ProjectGuid>{C1154025-FCAB-40AF-A715-91D10420C321}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CE.iPhone.PList</RootNamespace>
+    <RootNamespace>PListNet</RootNamespace>
     <AssemblyName>CE.iPhone.PList</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
@@ -37,25 +37,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IPListElement.cs" />
-    <Compile Include="PListBinaryReader.cs" />
-    <Compile Include="PListBinaryWriter.cs" />
-    <Compile Include="PListContainer\PListArray.cs" />
-    <Compile Include="PListContainer\PListDict.cs" />
-    <Compile Include="PListElement.cs" />
-    <Compile Include="PListElementFactory.cs" />
-    <Compile Include="PListExceptions\PListException.cs" />
-    <Compile Include="PListExceptions\PListFormatException.cs" />
     <Compile Include="PListFormat.cs" />
-    <Compile Include="PListPrimitives\PListBool.cs" />
-    <Compile Include="PListPrimitives\PListData.cs" />
-    <Compile Include="PListPrimitives\PListDate.cs" />
-    <Compile Include="PListPrimitives\PListFill.cs" />
-    <Compile Include="PListPrimitives\PListInteger.cs" />
-    <Compile Include="PListPrimitives\PListNull.cs" />
-    <Compile Include="PListPrimitives\PListReal.cs" />
-    <Compile Include="PListPrimitives\PListString.cs" />
     <Compile Include="PListRoot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Internal\PListBinaryReader.cs" />
+    <Compile Include="Internal\PListBinaryWriter.cs" />
+    <Compile Include="Internal\PListElement.cs" />
+    <Compile Include="Internal\PListElementFactory.cs" />
+    <Compile Include="Primitives\PListBool.cs" />
+    <Compile Include="Primitives\PListData.cs" />
+    <Compile Include="Primitives\PListDate.cs" />
+    <Compile Include="Primitives\PListFill.cs" />
+    <Compile Include="Primitives\PListInteger.cs" />
+    <Compile Include="Primitives\PListNull.cs" />
+    <Compile Include="Primitives\PListReal.cs" />
+    <Compile Include="Primitives\PListString.cs" />
+    <Compile Include="Collections\PListArray.cs" />
+    <Compile Include="Collections\PListDict.cs" />
+    <Compile Include="Exceptions\PListException.cs" />
+    <Compile Include="Exceptions\PListFormatException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -73,5 +73,8 @@
     <None Include="PList.nuspec">
       <Link>Properties\PList.nuspec</Link>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Internal\" />
   </ItemGroup>
 </Project>

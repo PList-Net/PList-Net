@@ -36,11 +36,13 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using PListNet.Collections;
+using PListNet.Exceptions;
+using PListNet.Primitives;
 
-namespace CE.iPhone.PList.Internal {
+namespace PListNet.Internal {
     /// <summary>
-    /// Singleton class which generates concrete <see cref="T:CE.iPhone.IPListElement"/> from the Tag or TypeCode
+    /// Singleton class which generates concrete <see cref="T:PListNet.IPListElement"/> from the Tag or TypeCode
     /// </summary>
     internal class PListElementFactory {
         private static PListElementFactory s_Instance;
@@ -100,48 +102,51 @@ namespace CE.iPhone.PList.Internal {
         }
 
         /// <summary>
-        /// Creates a concrete <see cref="T:CE.iPhone.IPListElement"/> object secified specified by it's typecode.
+        /// Creates a concrete <see cref="T:PListNet.IPListElement"/> object secified specified by it's typecode.
         /// </summary>
         /// <param name="typeCode">The typecode of the element.</param>
         /// <param name="length">The length of the element 
-        /// (required only for <see cref="T:CE.iPhone.PListBool"/>, <see cref="T:CE.iPhone.PListNull"/> and <see cref="T:CE.iPhone.PListFill"/>).</param>
-        /// <returns>The created <see cref="T:CE.iPhone.IPListElement"/> object</returns>
-        public IPListElement Create(Byte typeCode, Int32 length) {
-            if (typeCode == 0 && length == 0x00) return new PListNull();
-            if (typeCode == 0 && length == 0x0F) return new PListFill();
+        /// (required only for <see cref="T:PListNet.Primitives.PListBool"/>, <see cref="T:PListNet.Primitives.PListNull"/>
+		/// and <see cref="T:PListNet.Primitives.PListFill"/>).</param>
+        /// <returns>The created <see cref="T:PListNet.IPListElement"/> object</returns>
+        public IPListElement Create(Byte typeCode, Int32 length)
+		{
+			if (typeCode == 0 && length == 0x00) return new PListNull();
+			if (typeCode == 0 && length == 0x0F) return new PListFill();
 
-            if (m_PListElementTypeCodes.ContainsKey(typeCode))
-                return (IPListElement)Activator.CreateInstance(m_PListElementTypeCodes[typeCode]);            
-            else
-                throw new PListFormatException(string.Format("Unknown PList - TypeCode ({0})", typeCode));
-        }
+			if (m_PListElementTypeCodes.ContainsKey(typeCode))
+				return (IPListElement) Activator.CreateInstance(m_PListElementTypeCodes[typeCode]);
+			
+			throw new PListFormatException(string.Format("Unknown PList - TypeCode ({0})", typeCode));
+		}
 
         /// <summary>        
-        /// Creates a concrete <see cref="T:CE.iPhone.IPListElement"/> object secified specified by it's tag.
+        /// Creates a concrete <see cref="T:PListNet.IPListElement"/> object secified specified by it's tag.
         /// </summary>
         /// <param name="tag">The tag of the element.</param>
-        /// <returns>The created <see cref="T:CE.iPhone.IPListElement"/> object</returns>
-        public IPListElement Create(String tag) {
-            if (m_PListElementTags.ContainsKey(tag))
-                return (IPListElement)Activator.CreateInstance(m_PListElementTags[tag]);  
-            else
-                throw new PListFormatException(string.Format("Unknown PList - Tag ({0})", tag));
-        }
+        /// <returns>The created <see cref="T:PListNet.IPListElement"/> object</returns>
+        public IPListElement Create(String tag)
+		{
+			if (m_PListElementTags.ContainsKey(tag))
+				return (IPListElement) Activator.CreateInstance(m_PListElementTags[tag]);
+			
+			throw new PListFormatException(string.Format("Unknown PList - Tag ({0})", tag));
+		}
 
         /// <summary>
-        /// Creates a <see cref="T:CE.iPhone.IPListElement"/> object used for exteded length information.
+        /// Creates a <see cref="T:PListNet.IPListElement"/> object used for exteded length information.
         /// </summary>
         /// <param name="length">The exteded length information.</param>
-        /// <returns>The <see cref="T:CE.iPhone.IPListElement"/> object used for exteded length information.</returns>
+        /// <returns>The <see cref="T:PListNet.IPListElement"/> object used for exteded length information.</returns>
         public IPListElement CreateLengthElement(int length) {
             return new PListInteger(length);
         }
 
         /// <summary>
-        /// Creates a <see cref="T:CE.iPhone.IPListElement"/> object used for dictionary keys.
+        /// Creates a <see cref="T:PListNet.IPListElement"/> object used for dictionary keys.
         /// </summary>
         /// <param name="key">The key.</param>
-        /// <returns>The <see cref="T:CE.iPhone.IPListElement"/> object used for dictionary keys.</returns>
+        /// <returns>The <see cref="T:PListNet.IPListElement"/> object used for dictionary keys.</returns>
         public IPListElement CreateKeyElement(String key) {
             return new PListString(key);
         }

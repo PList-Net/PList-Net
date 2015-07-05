@@ -1,5 +1,5 @@
 ﻿/* =================================================================================
- * File:   PListNull.cs
+ * File:   PListFill.cs
  * Author: Christian Ecker
  *
  * Major Changes:
@@ -35,26 +35,22 @@
  * =================================================================================
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
+using PListNet.Exceptions;
+using PListNet.Internal;
 
-using CE.iPhone.PList.Internal;
-
-namespace CE.iPhone.PList {
+namespace PListNet.Primitives {
     /// <summary>
-    /// Represents a null element in a PList
+    /// Represents a fill element in a PList
     /// </summary>
     /// <remarks>Is skipped in Xml-Serialization</remarks>
-    public class PListNull : IPListElement {
+    public class PListFill : IPListElement {
         #region IPListElement Members
 
         /// <summary>
         /// Gets the Xml tag of this element.
         /// </summary>
         /// <value>The Xml tag of this element.</value>
-        public String Tag { get { return "null"; } }
+        public String Tag { get { return "fill"; } }
 
         /// <summary>
         /// Gets the binary typecode of this element.
@@ -73,12 +69,11 @@ namespace CE.iPhone.PList {
         /// <summary>
         /// Reads this element binary from the reader.
         /// </summary>
-        /// <param name="reader">The <see cref="T:CE.iPhone.PListBinaryReader"/> from which the element is read.</param>
+        /// <param name="reader">The <see cref="T:PListNet.Internal.PListBinaryReader"/> from which the element is read.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public void ReadBinary(PListBinaryReader reader) {
-            if (reader.CurrentElementLength != 0x00)
+            if (reader.CurrentElementLength != 0x0F)
                 throw new PListFormatException();
-
         }
 
         /// <summary>
@@ -87,7 +82,7 @@ namespace CE.iPhone.PList {
         /// <returns>The length of this PList element.</returns>
         /// <remarks>Provided for internal use only.</remarks>
         public int GetPListElementLength() {
-            return 0;
+            return 0x0F;
         }
 
         /// <summary>
@@ -104,9 +99,10 @@ namespace CE.iPhone.PList {
         /// <summary>
         /// Writes this element binary to the writer.
         /// </summary>
-        /// <param name="writer">The <see cref="T:CE.iPhone.PListBinaryWriter"/> to which the element is written.</param>
+        /// <param name="writer">The <see cref="T:PListNet.Internal.PListBinaryWriter"/> to which the element is written.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public void WriteBinary(PListBinaryWriter writer) { }
+
         #endregion
 
         #region IXmlSerializable Members

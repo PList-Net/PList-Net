@@ -1,5 +1,5 @@
 ﻿/* =================================================================================
- * File:   PListBool.cs
+ * File:   PListInteger.cs
  * Author: Christian Ecker
  *
  * Major Changes:
@@ -35,77 +35,51 @@
  * =================================================================================
  */
 using System;
-using System.Diagnostics;
-using System.Xml;
+using System.Globalization;
+using System.Net;
+using PListNet.Exceptions;
+using PListNet.Internal;
 
-using CE.iPhone.PList.Internal;
-
-namespace CE.iPhone.PList {
+namespace PListNet.Primitives {
     /// <summary>
-    /// Represents a Boolean Value from a PList
+    /// Represents an integer Value from a PList
     /// </summary>
-    public class PListBool : PListElement<Boolean> {
+    public class PListInteger : PListElement<Int64> {
         /// <summary>
         /// Gets the Xml tag of this element.
         /// </summary>
         /// <value>The Xml tag of this element.</value>
-        public override String Tag { get { return "boolean"; } }
+        public override String Tag { get { return "integer"; } }
 
         /// <summary>
         /// Gets the binary typecode of this element.
         /// </summary>
         /// <value>The binary typecode of this element.</value>
-        public override Byte TypeCode { get { return 0; } }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is written only once in binary mode.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> this instance is written only once in binary mode; otherwise, <c>false</c>.
-        /// </value>
-        public override bool IsBinaryUnique { get { return true; } }
+        public override Byte TypeCode { get { return 1; } }
 
         /// <summary>
         /// Gets or sets the value of this element.
         /// </summary>
         /// <value>The value of this element.</value>
-        public override Boolean Value { get; set; }
+        public override Int64 Value { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PListBool"/> class.
+        /// Initializes a new instance of the <see cref="PListInteger"/> class.
         /// </summary>
-        public PListBool() { }
+        public PListInteger() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PListBool"/> class.
+        /// Initializes a new instance of the <see cref="PListInteger"/> class.
         /// </summary>
-        /// <param name="value">The Value of this element</param>
-        public PListBool(Boolean value) { Value = value; }
-
-        /// <summary>
-        /// Generates an object from its XML representation.
-        /// </summary>
-        /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
-        public override void ReadXml(XmlReader reader) {
-            Parse(reader.LocalName);
-            reader.ReadStartElement();
-        }
-
-        /// <summary>
-        /// Converts an object into its XML representation.
-        /// </summary>
-        /// <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which the object is serialized.</param>
-        public override void WriteXml(XmlWriter writer) {
-            writer.WriteStartElement(ToXmlString());
-            writer.WriteEndElement();
-        }
+        /// <param name="value">The value of this element.</param>
+        public PListInteger(Int64 value) { Value = value; }
 
         /// <summary>
         /// Parses the specified value from a given String, read from Xml.
         /// </summary>
         /// <param name="value">The String whis is parsed.</param>
         protected override void Parse(String value) {
-            Value = value == "true";
+            Value = Int64.Parse(value, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -115,28 +89,29 @@ namespace CE.iPhone.PList {
         /// The XML String representation of the Value.
         /// </returns>
         protected override String ToXmlString() {
-            return Value ? "true" : "false";
+            return Value.ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>
         /// Reads this element binary from the reader.
         /// </summary>
-        /// <param name="reader">The <see cref="T:CE.iPhone.PListBinaryReader"/> from which the element is read.</param>
+        /// <param name="reader">The <see cref="T:PListNet.Internal.PListBinaryReader"/> from which the element is read.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public override void ReadBinary(PListBinaryReader reader) {
-            if (reader.CurrentElementLength != 8 && reader.CurrentElementLength != 9)
+
+            Byte[] buf = new Byte[1 << (int)reader.CurrentElementLength];
+            if (reader.BaseStream.Read(buf, 0, buf.Length) != buf.Length)
                 throw new PListFormatException();
 
-            Value = reader.CurrentElementLength == 9;
 
+            switch (reader.CurrentElementLength) {
+                case 0: Value = buf[0]; break;
+                case 1: Value = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(buf, 0)); break;
+                case 2: Value = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(buf, 0)); break;
+                case 3: Value = IPAddress.NetworkToHostOrder(BitConverter.ToInt64(buf, 0)); break;
+                default: throw new PListFormatException("Int > 64Bit");
+            }
         }
-
-        /// <summary>
-        /// Writes this element binary to the writer.
-        /// </summary>
-        /// <param name="writer">The <see cref="T:CE.iPhone.PListBinaryWriter"/> to which the element is written.</param>
-        /// <remarks>Provided for internal use only.</remarks>
-        public override void WriteBinary(PListBinaryWriter writer) { }
 
         /// <summary>
         /// Gets the length of this PList element.
@@ -144,7 +119,28 @@ namespace CE.iPhone.PList {
         /// <returns>The length of this PList element.</returns>
         /// <remarks>Provided for internal use only.</remarks>
         public override int GetPListElementLength() {
-            return Value ? 9 : 8;
+            if (Value >= Byte.MinValue && Value <= Byte.MaxValue) return 0;
+            if (Value >= Int16.MinValue && Value <= Int16.MaxValue) return 1;
+            if (Value >= Int32.MinValue && Value <= Int32.MaxValue) return 2;
+            if (Value >= Int64.MinValue && Value <= Int64.MaxValue) return 3;
+            return -1;
+        }
+
+        /// <summary>
+        /// Writes this element binary to the writer.
+        /// </summary>
+        /// <param name="writer">The <see cref="T:PListNet.Internal.PListBinaryWriter"/> to which the element is written.</param>
+        /// <remarks>Provided for internal use only.</remarks>
+        public override void WriteBinary(PListBinaryWriter writer) {
+            int length = GetPListElementLength();
+            Byte[] buf = null;
+            switch (length) {
+                case 0: buf = new Byte[] { (Byte)Value }; break;
+                case 1: buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((Int16)Value)); break;
+                case 2: buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((Int32)Value)); break;
+                case 3: buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((Int64)Value)); break;
+            }
+            writer.BaseStream.Write(buf, 0, buf.Length);
         }
     }
 }

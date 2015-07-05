@@ -36,13 +36,14 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
+using PListNet.Exceptions;
+using PListNet.Primitives;
 
-namespace CE.iPhone.PList.Internal {
+namespace PListNet.Internal {
     /// <summary>
-    /// A class, used to write a <see cref="T:CE.iPhone.PList.IPListElement"/>  binary formated to a stream
+    /// A class, used to write a <see cref="T:PListNet.IPListElement"/>  binary formated to a stream
     /// </summary>
     public class PListBinaryWriter {
         /// <summary>
@@ -77,7 +78,7 @@ namespace CE.iPhone.PList.Internal {
         internal PListBinaryWriter() { }
 
         /// <summary>
-        /// Writers a <see cref="T:CE.iPhone.PList.IPListElement"/> to the specified stream.
+        /// Writers a <see cref="T:PListNet.IPListElement"/> to the specified stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
         /// <param name="element">The element.</param>
@@ -143,7 +144,7 @@ namespace CE.iPhone.PList.Internal {
         }
 
         /// <summary>
-        /// Writers a <see cref="T:CE.iPhone.PList.IPListElement"/> to the current stream position
+        /// Writers a <see cref="T:PListNet.IPListElement"/> to the current stream position
         /// </summary>
         /// <param name="element">The element.</param>
         /// <returns>The Inx of the written element</returns>

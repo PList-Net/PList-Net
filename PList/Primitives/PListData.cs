@@ -35,11 +35,10 @@
  * =================================================================================
  */
 using System;
-using System.Diagnostics;
+using PListNet.Exceptions;
+using PListNet.Internal;
 
-using CE.iPhone.PList.Internal;
-
-namespace CE.iPhone.PList {
+namespace PListNet.Primitives {
     /// <summary>
     /// Represents a Byte[] Value from a PList
     /// </summary>
@@ -94,7 +93,7 @@ namespace CE.iPhone.PList {
         /// <summary>
         /// Reads this element binary from the reader.
         /// </summary>
-        /// <param name="reader">The <see cref="T:CE.iPhone.PListBinaryReader"/> from which the element is read.</param>
+        /// <param name="reader">The <see cref="T:PListNet.Internal.PListBinaryReader"/> from which the element is read.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public override void ReadBinary(PListBinaryReader reader) {
             Value = new Byte[reader.CurrentElementLength];
@@ -114,7 +113,7 @@ namespace CE.iPhone.PList {
         /// <summary>
         /// Writes this element binary to the writer.
         /// </summary>
-        /// <param name="writer">The <see cref="T:CE.iPhone.PListBinaryWriter"/> to which the element is written.</param>
+        /// <param name="writer">The <see cref="T:PListNet.Internal.PListBinaryWriter"/> to which the element is written.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public override void WriteBinary(PListBinaryWriter writer) {
             writer.BaseStream.Write(Value, 0, Value.Length);

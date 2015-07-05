@@ -40,10 +40,9 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using PListNet.Internal;
 
-using CE.iPhone.PList.Internal;
-
-namespace CE.iPhone.PList {
+namespace PListNet {
     /// <summary>
     /// Represents a PList File
     /// </summary>

@@ -36,12 +36,11 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
+using PListNet.Exceptions;
+using PListNet.Internal;
 
-using CE.iPhone.PList.Internal;
-
-namespace CE.iPhone.PList {
+namespace PListNet.Primitives {
     /// <summary>
     /// Represents an string Value from a PList 
     /// </summary>
@@ -132,7 +131,7 @@ namespace CE.iPhone.PList {
         /// <summary>
         /// Reads this element binary from the reader.
         /// </summary>
-        /// <param name="reader">The <see cref="T:CE.iPhone.PListBinaryReader"/> from which the element is read.</param>
+        /// <param name="reader">The <see cref="T:PListNet.Internal.PListBinaryReader"/> from which the element is read.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public override void ReadBinary(PListBinaryReader reader) {
 
@@ -158,14 +157,12 @@ namespace CE.iPhone.PList {
         /// <summary>
         /// Writes this element binary to the writer.
         /// </summary>
-        /// <param name="writer">The <see cref="T:CE.iPhone.PListBinaryWriter"/> to which the element is written.</param>
+        /// <param name="writer">The <see cref="T:PListNet.Internal.PListBinaryWriter"/> to which the element is written.</param>
         /// <remarks>Provided for internal use only.</remarks>
         public override void WriteBinary(PListBinaryWriter writer) {
             Encoding enc = m_IsUTF16 ? Encoding.BigEndianUnicode : Encoding.UTF8;
             Byte[] buf = enc.GetBytes(Value);
             writer.BaseStream.Write(buf, 0, buf.Length);
         }
-
-
-    }
+	}
 }
