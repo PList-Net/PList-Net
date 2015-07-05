@@ -97,7 +97,6 @@ namespace PListNet.Internal {
             }
 
             return ReadInternal(topElement);
-
         }
 
         /// <summary>

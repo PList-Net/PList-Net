@@ -42,162 +42,202 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using PListNet.Internal;
 
-namespace PListNet {
-    /// <summary>
-    /// Represents a PList File
-    /// </summary>
-    [XmlRoot("plist")]
-    public class PListRoot : IXmlSerializable {
+namespace PListNet
+{
+	/// <summary>
+	/// Represents a PList File
+	/// </summary>
+	[XmlRoot("plist")]
+	public class PListRoot : IXmlSerializable
+	{
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="PListRoot"/> is stored in binary format.
+		/// </summary>
+		/// <value><c>true</c> if stored in binary format; otherwise, <c>false</c>.</value>
+		public PListFormat Format { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="PListRoot"/> is stored in binary format.
-        /// </summary>
-        /// <value><c>true</c> if stored in binary format; otherwise, <c>false</c>.</value>
-        public PListFormat Format { get; set; }
+		/// <summary>
+		/// Loads the PList from specified file.
+		/// </summary>
+		/// <param name="fileName">The path of the PList.</param>
+		/// <returns>A <see cref="PListRoot"/> object loaded from the file</returns>
+		public static PListRoot Load(string fileName)
+		{
+			using (var fs = new FileStream(fileName, FileMode.Open))
+			{
+				return Load(fs);
+			}
+		}
 
-        /// <summary>
-        /// Loads the PList from specified file.
-        /// </summary>
-        /// <param name="fileName">The path of the PList.</param>
-        /// <returns>A <see cref="PListRoot"/> object loaded from the file</returns>
-        public static PListRoot Load(String fileName) {
-            using (FileStream fs = new FileStream(fileName, FileMode.Open)) {
-                return Load(fs);
-            }
-        }
+		/// <summary>
+		/// Loads the PList from specified stream.
+		/// </summary>
+		/// <param name="stream">The stream containing the PList.</param>
+		/// <returns>A <see cref="PListRoot"/> object loaded from the stream</returns>
+		public static PListRoot Load(Stream stream)
+		{
+			var isBinary = IsFormatBinary(stream);
 
+			// Detect binary format, and read using the appropriate method
+			return (isBinary)
+				? LoadAsBinary(stream)
+				: LoadAsXml(stream);
+		}
 
-        /// <summary>
-        /// Loads the PList from specified stream.
-        /// </summary>
-        /// <param name="stream">The stream containing the PList.</param>
-        /// <returns>A <see cref="PListRoot"/> object loaded from the stream</returns>
-        public static PListRoot Load(Stream stream) {
-            PListRoot root= null;
-            Byte[] buf = new Byte[8];
-            stream.Read(buf, 0, buf.Length);
-            stream.Seek(0, SeekOrigin.Begin);
-            if (Encoding.Default.GetString(buf) == "bplist00") {
-                PListBinaryReader reader = new PListBinaryReader();
-                root = new PListRoot();
-                root.Format = PListFormat.Binary;
-                root.Root = reader.Read(stream);
-            } else { 
-				// set resolver to null in order to avoid calls to apple.com to resolve DTD
-				var settings = new XmlReaderSettings {
-					XmlResolver = null
-				};
-				using (var reader = XmlReader.Create(stream, settings)) {
-					var serializer = new XmlSerializer(typeof(PListRoot));
-					root = (PListRoot) serializer.Deserialize(reader);
-					root.Format = PListFormat.Xml;
+		private static bool IsFormatBinary(Stream stream)
+		{
+			var buf = new Byte[8];
+
+			// read in first 8 bytes
+			stream.Read(buf, 0, buf.Length);
+
+			// rewind
+			stream.Seek(0, SeekOrigin.Begin);
+
+			// compare to known indicator
+			return Encoding.Default.GetString(buf) == "bplist00";
+		}
+
+		private static PListRoot LoadAsBinary(Stream stream)
+		{
+			var reader = new PListBinaryReader();
+			var root = new PListRoot();
+			root.Format = PListFormat.Binary;
+			root.Root = reader.Read(stream);
+
+			return root;
+		}
+
+		private static PListRoot LoadAsXml(Stream stream)
+		{
+			// set resolver to null in order to avoid calls to apple.com to resolve DTD
+			var settings = new XmlReaderSettings { XmlResolver = null };
+
+			using (var reader = XmlReader.Create(stream, settings))
+			{
+				var serializer = new XmlSerializer(typeof(PListRoot));
+				var root = (PListRoot) serializer.Deserialize(reader);
+				root.Format = PListFormat.Xml;
+				return root;
+			}
+		}
+
+		/// <summary>
+		/// Saves the PList to the specified path.
+		/// </summary>
+		/// <param name="fileName">The path of the PList.</param>
+		/// <param name="format">The format of the PList (Binary/Xml).</param>
+		public void Save(String fileName, PListFormat format)
+		{
+			using (var fs = new FileStream(fileName, FileMode.Create))
+			{
+				Save(fs, format);                
+			}
+		}
+
+		/// <summary>
+		/// Saves the PList to the specified path.
+		/// </summary>
+		/// <param name="fileName">The path of the PList.</param>
+		public void Save(string fileName)
+		{
+			Save(fileName, Format);
+		}
+
+		/// <summary>
+		/// Saves the PList to the specified stream.
+		/// </summary>
+		/// <param name="stream">The stream in which the PList is saves.</param>
+		public void Save(Stream stream)
+		{
+			Save(stream, Format);
+		}
+
+		/// <summary>
+		/// Saves the PList to the specified stream.
+		/// </summary>
+		/// <param name="stream">The stream in which the PList is saves.</param>
+		/// <param name="format">The format of the PList (Binary/Xml).</param>
+		public void Save(Stream stream, PListFormat format)
+		{
+			if (format == PListFormat.Xml)
+			{
+				var sets = new XmlWriterSettings
+					{
+						Encoding = Encoding.UTF8,
+						Indent = true,
+						IndentChars = "\t",
+						NewLineChars = "\n",
+					};
+
+				using (var xmlWriter = XmlWriter.Create(stream, sets))
+				{
+					xmlWriter.WriteStartDocument();
+					xmlWriter.WriteDocType("plist", "-//Apple Computer//DTD PLIST 1.0//EN", "http://www.apple.com/DTDs/PropertyList-1.0.dtd", null);
+
+					WriteXml(xmlWriter);
+					xmlWriter.Flush();
 				}
-            }
+			}
+			else
+			{
+				var writer = new PListBinaryWriter();
+				writer.Write(stream, Root);
+			}
+		}
 
-            return root;
-        }
+		/// <summary>
+		/// Gets or sets the root PList-Element.
+		/// </summary>
+		/// <value>The root PList-Element.</value>
+		public IPListElement Root { get; set; }
 
-        /// <summary>
-        /// Saves the PList to the specified path.
-        /// </summary>
-        /// <param name="fileName">The path of the PList.</param>
-        /// <param name="format">The format of the PList (Binary/Xml).</param>
-        public void Save(String fileName, PListFormat format){
-            using (FileStream fs = new FileStream(fileName, FileMode.Create)) {
-                Save(fs, format);                
-            }
-        }
+		#region IXmlSerializable Members
 
-        /// <summary>
-        /// Saves the PList to the specified path.
-        /// </summary>
-        /// <param name="fileName">The path of the PList.</param>
-        public void Save(String fileName) {
-            Save(fileName, Format);
-        }
+		/// <summary>
+		/// This method is reserved and should not be used. When implementing the IXmlSerializable interface, 
+		/// you should return null (Nothing in Visual Basic) from this method, and instead, if specifying a 
+		/// custom schema is required, apply the <see cref="T:System.Xml.Serialization.XmlSchemaProviderAttribute"/> 
+		/// to the class.
+		/// </summary>
+		/// <returns>
+		/// An <see cref="T:System.Xml.Schema.XmlSchema"/> that describes the XML representation of the object that is
+		/// produced by the <see cref="M:System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter)"/> 
+		/// method and consumed by the <see cref="M:System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader)"/>
+		/// method.
+		/// </returns>
+		public XmlSchema GetSchema()
+		{
+			return null;
+		}
 
-        /// <summary>
-        /// Saves the PList to the specified stream.
-        /// </summary>
-        /// <param name="stream">The stream in which the PList is saves.</param>
-        public void Save(Stream stream) {
-            Save(stream, Format);
-        }
+		/// <summary>
+		/// Generates an object from its XML representation.
+		/// </summary>
+		/// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
+		public void ReadXml(XmlReader reader)
+		{
+			reader.ReadStartElement("plist");
 
-        /// <summary>
-        /// Saves the PList to the specified stream.
-        /// </summary>
-        /// <param name="stream">The stream in which the PList is saves.</param>
-        /// <param name="format">The format of the PList (Binary/Xml).</param>
-        public void Save(Stream stream, PListFormat format) {
-            if (format == PListFormat.Xml) {
-                XmlWriterSettings sets = new XmlWriterSettings();
-                sets.Encoding = Encoding.UTF8;
-                sets.Indent = true;
-                sets.IndentChars = "\t";
-                sets.NewLineChars = "\n";
+			Root = PListElementFactory.Instance.Create(reader.LocalName);
+			Root.ReadXml(reader);
 
-                XmlWriter xmlWriter = XmlTextWriter.Create(stream, sets);
+			reader.ReadEndElement();
+		}
 
-                xmlWriter.WriteStartDocument();
-                xmlWriter.WriteDocType("plist", "-//Apple Computer//DTD PLIST 1.0//EN", "http://www.apple.com/DTDs/PropertyList-1.0.dtd", null);
+		/// <summary>
+		/// Converts an object into its XML representation.
+		/// </summary>
+		/// <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which the object is serialized.</param>
+		public void WriteXml(XmlWriter writer)
+		{
+			writer.WriteStartElement("plist");
+			writer.WriteAttributeString("version", "1.0");
+			if (Root != null) Root.WriteXml(writer);
 
-                WriteXml(xmlWriter);
-                xmlWriter.Flush();
-            } else {
-                PListBinaryWriter writer = new PListBinaryWriter();
-                writer.Write(stream, Root);
-            }
-        }
+			writer.WriteEndElement();
+		}
 
-        /// <summary>
-        /// Gets or sets the root PList-Element.
-        /// </summary>
-        /// <value>The root PList-Element.</value>
-        public IPListElement Root { get; set; }
-
-        #region IXmlSerializable Members
-
-        /// <summary>
-        /// This method is reserved and should not be used. When implementing the IXmlSerializable interface, 
-        /// you should return null (Nothing in Visual Basic) from this method, and instead, if specifying a 
-        /// custom schema is required, apply the <see cref="T:System.Xml.Serialization.XmlSchemaProviderAttribute"/> 
-        /// to the class.
-        /// </summary>
-        /// <returns>
-        /// An <see cref="T:System.Xml.Schema.XmlSchema"/> that describes the XML representation of the object that is
-        /// produced by the <see cref="M:System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter)"/> 
-        /// method and consumed by the <see cref="M:System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader)"/>
-        /// method.
-        /// </returns>
-        public XmlSchema GetSchema() { return null; }
-
-        /// <summary>
-        /// Generates an object from its XML representation.
-        /// </summary>
-        /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
-        public void ReadXml(XmlReader reader) {
-
-            reader.ReadStartElement("plist");
-
-            Root = PListElementFactory.Instance.Create(reader.LocalName);
-            Root.ReadXml(reader);
-
-            reader.ReadEndElement();
-        }
-
-        /// <summary>
-        /// Converts an object into its XML representation.
-        /// </summary>
-        /// <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which the object is serialized.</param>
-        public void WriteXml(XmlWriter writer) {
-            writer.WriteStartElement("plist");
-            writer.WriteAttributeString("version", "1.0");
-            if (Root != null) Root.WriteXml(writer);
-
-            writer.WriteEndElement();
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }
