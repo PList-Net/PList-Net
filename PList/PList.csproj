@@ -69,4 +69,9 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="PList.nuspec">
+      <Link>Properties\PList.nuspec</Link>
+    </None>
+  </ItemGroup>
 </Project>
