@@ -50,7 +50,7 @@ namespace PListNet.Collections {
     /// <summary>
     /// Represents an dictionary with <see cref="T:System.String"/> keys and <see cref="T:PListNet.IPListElement"/> values
     /// </summary>
-    public class PListDict : Dictionary<String, IPListElement>, IPListElement {
+    public class PListDict : Dictionary<string, IPListElement>, IPListElement {
         #region IPListElement Members
 
         /// <summary>
