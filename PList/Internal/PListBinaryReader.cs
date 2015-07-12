@@ -1,159 +1,251 @@
-﻿/* =================================================================================
- * File:   PListBinaryReader.cs
- * Author: Christian Ecker
- *
- * Major Changes:
- * yyyy-mm-dd   Author               Description
- * ----------------------------------------------------------------
- * 2009-09-13   Christian Ecker      Created
- *
- * =================================================================================
- * Copyright (c) 2009, Christian Ecker
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without modification, 
- * are permitted provided that the following conditions are met:
- * 
- *  - Redistributions of source code must retain the above copyright notice, 
- *    this list of conditions and the following disclaimer.
- * 
- *  - Redistributions in binary form must reproduce the above copyright notice, 
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *    
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- * =================================================================================
- */
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using PListNet.Collections;
 using PListNet.Exceptions;
 using PListNet.Primitives;
 
-namespace PListNet.Internal {
-    /// <summary>
-	/// A class, used to read binary formated <see cref="T:PListNet.IPListElement"/> from a stream
-    /// </summary>
-    public class PListBinaryReader {
-        private Int32[] m_Offsets;
+namespace PListNet.Internal
+{
+	/// <summary>
+	/// A class, used to read binary formated <see cref="T:PListNet.PNode"/> from a stream
+	/// </summary>
+	internal class PListBinaryReader
+	{
+		/// <summary>
+		/// Gets the basestream.
+		/// </summary>
+		/// <value>The basestream.</value>
+		internal Stream BaseStream { get; private set; }
 
-        /// <summary>
-        /// Gets the basestream.
-        /// </summary>
-        /// <value>The basestream.</value>
-        internal Stream BaseStream { get; private set; }
+		/// <summary>
+		/// Gets or sets the size of the element idx.
+		/// </summary>
+		/// <value>The size of the element idx.</value>
+		internal Byte ElementIdxSize { get; private set; }
 
-        /// <summary>
-        /// Gets or sets the size of the element idx.
-        /// </summary>
-        /// <value>The size of the element idx.</value>
-        internal Byte ElementIdxSize {get; private set;}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PListBinaryReader"/> class.
+		/// </summary>
+		internal PListBinaryReader()
+		{
+		}
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PListBinaryReader"/> class.
-        /// </summary>
-        internal PListBinaryReader() { }
+		/// <summary>
+		/// Reads a binary formated <see cref="T:PListNet.PNode"/> from the specified stream.
+		/// </summary>
+		/// <param name="stream">The stream.</param>
+		/// <returns>The <see cref="T:PListNet.PNode"/>, read from the specified stream</returns>
+		public PNode Read(Stream stream)
+		{
+			BaseStream = stream;
 
-        /// <summary>
-		/// Reads a binary formated <see cref="T:PListNet.IPListElement"/> from the specified stream.
-        /// </summary>
-        /// <param name="stream">The stream.</param>
-		/// <returns>The <see cref="T:PListNet.IPListElement"/>, read from the specified stream</returns>
-        public IPListElement Read(Stream stream) {
-            BaseStream = stream;
-            Byte[] header = new Byte[32];
-            BaseStream.Seek(-32, SeekOrigin.End);
-            if (BaseStream.Read(header, 0, header.Length) != header.Length)
-                throw new PListFormatException("Invalid Header Size");
+			// read in file header
+			var header = ReadHeader(stream);
 
-            Byte offsetSize = header[6];
-            ElementIdxSize = header[7];
-            Int32 elementCnt = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(header, 12));
-            Int32 topElement = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(header, 20));
-            Int32 offsetTableOffset = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(header, 28));
+			// read in node offsets
+			var nodeOffsets = ReadNodeOffsets(stream, header);
 
-            Byte[] offsetTableBuf = new Byte[elementCnt * offsetSize];
-            BaseStream.Seek(offsetTableOffset, SeekOrigin.Begin);
-            if (BaseStream.Read(offsetTableBuf, 0, offsetTableBuf.Length) != offsetTableBuf.Length)
-                throw new PListFormatException("Invalid offsetTable Size");
+			var indexSize = header[7];
 
-            m_Offsets = new Int32[elementCnt];
-            for (int i = 0; i < m_Offsets.Length; i++) {
-                Byte[] cur = new Byte[sizeof(UInt32)];
-                for (int j = 0; j < offsetSize; j++) {
-                    cur[offsetSize - 1 - j] = offsetTableBuf[i * offsetSize + j];
-                }
-                m_Offsets[i] = BitConverter.ToInt32(cur, 0);
-            }
+			var readerState = new ReaderState(stream, nodeOffsets, indexSize);
 
-            return ReadInternal(topElement);
-        }
+			var topNode = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(header, 20));
+			return ReadInternal(readerState, topNode);
+		}
 
-        /// <summary>
-        /// Gets the current element type code.
-        /// </summary>
-        /// <value>The current element type code.</value>
-        internal Byte CurrentElementTypeCode { get; private set; }
+		private static byte[] ReadHeader(Stream stream)
+		{
+			var header = new byte[32];
 
-        /// <summary>
-        /// Gets the length of the current element.
-        /// </summary>
-        /// <value>The length of the current element.</value>
-        internal Int32 CurrentElementLength { get; private set; }
+			// header is 32 bytes at the end of file
+			stream.Seek(-32, SeekOrigin.End);
+			if (stream.Read(header, 0, header.Length) != header.Length)
+			{
+				throw new PListFormatException("Invalid Header Size");
+			}
 
-        /// <summary>
-        /// Reads the <see cref="T:PListNet.IPListElement"/> at the specified idx.
-        /// </summary>
+			return header;
+		}
+
+		private static int[] ReadNodeOffsets(Stream stream, byte[] header)
+		{
+			var offsetSize = header[6];
+
+			var nodeCount = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(header, 12));
+			var offsetTableOffset = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(header, 28));
+			var offsetTableBuffer = new byte[nodeCount * offsetSize];
+
+			stream.Seek(offsetTableOffset, SeekOrigin.Begin);
+			if (stream.Read(offsetTableBuffer, 0, offsetTableBuffer.Length) != offsetTableBuffer.Length)
+			{
+				throw new PListFormatException("Invalid offsetTable Size");
+			}
+
+			var nodeOffsets = new int[nodeCount];
+			for (int i = 0; i < nodeCount; i++)
+			{
+				var cur = new byte[sizeof(uint)];
+				for (int j = 0; j < offsetSize; j++)
+				{
+					cur[offsetSize - 1 - j] = offsetTableBuffer[i * offsetSize + j];
+				}
+				nodeOffsets[i] = BitConverter.ToInt32(cur, 0);
+			}
+
+			return nodeOffsets;
+		}
+
+		/// <summary>
+		/// Gets the current element type code.
+		/// </summary>
+		/// <value>The current element type code.</value>
+		internal Byte CurrentElementTypeCode { get; private set; }
+
+		/// <summary>
+		/// Gets the length of the current element.
+		/// </summary>
+		/// <value>The length of the current element.</value>
+		internal Int32 CurrentElementLength { get; private set; }
+
+		/// <summary>
+		/// Reads the <see cref="T:PListNet.PNode"/> at the specified idx.
+		/// </summary>
+		/// <param name="readerState">Reader state.</param>
 		/// <param name="elemIdx">The elem idx.</param>
-		/// <returns>The <see cref="T:PListNet.IPListElement"/> at the specified idx.</returns>
-        internal IPListElement ReadInternal(int elemIdx) {
-            BaseStream.Seek(m_Offsets[elemIdx], SeekOrigin.Begin);
-            return ReadInternal();
-        }
+		/// <returns>The <see cref="T:PListNet.PNode"/> at the specified idx.</returns>
+		private PNode ReadInternal(ReaderState readerState, int elemIdx)
+		{
+			readerState.Stream.Seek(readerState.NodeOffsets[elemIdx], SeekOrigin.Begin);
+			return ReadInternal(readerState);
+		}
 
-        /// <summary>
-		/// Reads the <see cref="T:PListNet.IPListElement"/> at the current stream position.
-        /// </summary>
-		/// <returns>The <see cref="T:PListNet.IPListElement"/> at the current stream position.</returns>
-        internal IPListElement ReadInternal() {
-            Byte[] buf = new Byte[1];
-            if (BaseStream.Read(buf, 0, buf.Length) != 1)
-                throw new PListFormatException("Didn't read type Byte");
+		/// <summary>
+		/// Reads the <see cref="T:PListNet.PNode"/> at the current stream position.
+		/// </summary>
+		/// <param name="readerState">Reader state.</param>
+		/// <returns>The <see cref="T:PListNet.PNode"/> at the current stream position.</returns>
+		private PNode ReadInternal(ReaderState readerState)
+		{
+			var buf = new byte[1];
+			if (readerState.Stream.Read(buf, 0, buf.Length) != 1)
+			{
+				throw new PListFormatException("Couldn't read type Byte");
+			}
 
-            Int32 objLen = buf[0] & 0x0F;
-            Byte typeCode = (Byte)((buf[0] >> 4) & 0x0F);
+			var objectLength = buf[0] & 0x0F;
+			var tag = (Byte) ((buf[0] >> 4) & 0x0F);
 
-            if (typeCode != 0 && objLen == 0x0F) {
-                IPListElement lenElem = ReadInternal();
-                if (!(lenElem is PListInteger))
-                    throw new PListFormatException("Element Len is no Integer");
-                objLen = (Int32)((PListInteger)lenElem).Value;
-            }
+			if (tag != 0 && objectLength == 0x0F)
+			{
+				var lengthNode = ReadInternal(readerState);
+				if (!(lengthNode is PListInteger))
+				{
+					throw new PListFormatException("Length is not an integer.");
+				}
 
-            IPListElement elem = PListElementFactory.Instance.Create(typeCode, objLen);
+				objectLength = (int) ((PListInteger) lengthNode).Value;
+			}
 
-            Byte tempElementTypeCode = CurrentElementTypeCode;
-            Int32 tempElementLength = CurrentElementLength;
+			var node = NodeFactory.Create(tag, objectLength);
 
-            CurrentElementTypeCode = typeCode;
-            CurrentElementLength = objLen;
+//			var tempElementTypeCode = CurrentElementTypeCode;
+//			var tempElementLength = CurrentElementLength;
+//
+//			CurrentElementTypeCode = tag;
+//			CurrentElementLength = objectLength;
 
-            elem.ReadBinary(this);
+			// array and dictionary are special-cased here
+			// while primitives handle their own loading
+			var arrayNode = node as PListArray;
+			if (arrayNode != null)
+			{
+				ReadInArray(arrayNode, objectLength, readerState);
+				return node;
+			}
 
-            CurrentElementTypeCode = tempElementTypeCode;
-            CurrentElementLength = tempElementLength;
+			var dictionaryNode = node as PListDict;
+			if (dictionaryNode != null)
+			{
+				ReadInDictionary(dictionaryNode, objectLength, readerState);
+				return node;
+			}
 
-            return elem;
-        }
-    }
+			node.ReadBinary(readerState.Stream, objectLength);
+
+//			CurrentElementTypeCode = tempElementTypeCode;
+//			CurrentElementLength = tempElementLength;
+
+			return node;
+		}
+
+		private void ReadInArray(ICollection<PNode> node, int nodeLength, ReaderState readerState)
+		{
+			var buf = new byte[nodeLength * readerState.IndexSize];
+			if (readerState.Stream.Read(buf, 0, buf.Length) != buf.Length)
+			{
+				throw new PListFormatException();
+			}
+
+			for (int i = 0; i < nodeLength; i++)
+			{
+				var topNode = readerState.IndexSize == 1
+					? buf[i]
+					: IPAddress.NetworkToHostOrder(BitConverter.ToInt16(buf, 2 * i));
+				node.Add(ReadInternal(readerState, topNode));
+			}
+		}
+
+		private void ReadInDictionary(IDictionary<string, PNode> node, int nodeLength, ReaderState readerState)
+		{
+			var bufKeys = new byte[nodeLength * readerState.IndexSize];
+			var bufVals = new byte[nodeLength * readerState.IndexSize];
+
+			if (readerState.Stream.Read(bufKeys, 0, bufKeys.Length) != bufKeys.Length)
+			{
+				throw new PListFormatException();
+			}
+
+			if (readerState.Stream.Read(bufVals, 0, bufVals.Length) != bufVals.Length)
+			{
+				throw new PListFormatException();
+			}
+
+			for (int i = 0; i < nodeLength; i++)
+			{
+				var topNode = readerState.IndexSize == 1
+					? bufKeys[i]
+					: IPAddress.NetworkToHostOrder(BitConverter.ToInt16(bufKeys, 2 * i));
+				var plKey = ReadInternal(readerState, topNode);
+
+				var stringKey = plKey as PListString;
+				if (stringKey == null)
+				{
+					throw new PListFormatException("Key is not a string");
+				}
+
+				topNode = readerState.IndexSize == 1
+					? bufVals[i]
+					: IPAddress.NetworkToHostOrder(BitConverter.ToInt16(bufVals, 2 * i));
+				var plVal = ReadInternal(readerState, topNode);
+
+				node.Add(stringKey.Value, plVal);
+			}
+		}
+
+		private class ReaderState
+		{
+			public Stream Stream { get; private set; }
+			public int[] NodeOffsets { get; private set; }
+			public int IndexSize { get; private set; }
+
+			public ReaderState(Stream stream, int[] nodeOffsets, int indexSize)
+			{
+				Stream = stream;
+				NodeOffsets = nodeOffsets;
+				IndexSize = indexSize;
+			}
+		}
+	}
 }

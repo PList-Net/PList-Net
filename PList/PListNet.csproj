@@ -36,14 +36,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IPListElement.cs" />
     <Compile Include="PListFormat.cs" />
-    <Compile Include="PListRoot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internal\PListBinaryReader.cs" />
     <Compile Include="Internal\PListBinaryWriter.cs" />
     <Compile Include="Internal\PListElement.cs" />
-    <Compile Include="Internal\PListElementFactory.cs" />
     <Compile Include="Primitives\PListBool.cs" />
     <Compile Include="Primitives\PListData.cs" />
     <Compile Include="Primitives\PListDate.cs" />
@@ -56,6 +53,10 @@
     <Compile Include="Collections\PListDict.cs" />
     <Compile Include="Exceptions\PListException.cs" />
     <Compile Include="Exceptions\PListFormatException.cs" />
+    <Compile Include="PList.cs" />
+    <Compile Include="PNode.cs" />
+    <Compile Include="Internal\NodeFactory.cs" />
+    <Compile Include="Internal\XmlFormatReader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
