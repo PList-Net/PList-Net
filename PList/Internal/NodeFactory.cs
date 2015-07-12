@@ -91,7 +91,7 @@ namespace PListNet.Internal
 				return (PNode) Activator.CreateInstance(_xmlTags[tag]);
 			}
 
-			throw new PListFormatException(string.Format("Unknown node - XML tag {0}", tag));
+			throw new PListFormatException(string.Format("Unknown node - XML tag \"{0}\"", tag));
 		}
 
 		/// <summary>
