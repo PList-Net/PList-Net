@@ -55,7 +55,7 @@ namespace PListNet
 
 		private static PNode LoadAsBinary(Stream stream)
 		{
-			var reader = new PListBinaryReader();
+			var reader = new BinaryFormatReader();
 			return reader.Read(stream);
 		}
 
@@ -126,7 +126,7 @@ namespace PListNet
 			}
 			else
 			{
-				var writer = new PListBinaryWriter();
+				var writer = new BinaryFormatWriter();
 				writer.Write(stream, rootNode);
 			}
 		}

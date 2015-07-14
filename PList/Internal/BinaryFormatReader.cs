@@ -9,12 +9,12 @@ namespace PListNet.Internal
 	/// <summary>
 	/// A class, used to read binary formated <see cref="T:PListNet.PNode"/> from a stream
 	/// </summary>
-	internal class PListBinaryReader
+	internal class BinaryFormatReader
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PListBinaryReader"/> class.
+		/// Initializes a new instance of the <see cref="BinaryFormatReader"/> class.
 		/// </summary>
-		internal PListBinaryReader()
+		internal BinaryFormatReader()
 		{
 		}
 

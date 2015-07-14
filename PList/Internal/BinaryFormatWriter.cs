@@ -10,7 +10,7 @@ namespace PListNet.Internal
 	/// <summary>
 	/// A class, used to write a <see cref="T:PListNet.PNode"/>  binary formated to a stream
 	/// </summary>
-	public class PListBinaryWriter
+	public class BinaryFormatWriter
 	{
 		/// <summary>
 		/// The Header (bplist00)
@@ -22,9 +22,9 @@ namespace PListNet.Internal
 		private readonly Dictionary<byte, Dictionary<PNode, int>> _uniqueElements = new Dictionary<byte, Dictionary<PNode, int>>();
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PListBinaryWriter"/> class.
+		/// Initializes a new instance of the <see cref="BinaryFormatWriter"/> class.
 		/// </summary>
-		internal PListBinaryWriter()
+		internal BinaryFormatWriter()
 		{
 		}
 

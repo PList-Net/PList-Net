@@ -38,8 +38,6 @@
   <ItemGroup>
     <Compile Include="PListFormat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Internal\PListBinaryReader.cs" />
-    <Compile Include="Internal\PListBinaryWriter.cs" />
     <Compile Include="PList.cs" />
     <Compile Include="PNode.cs" />
     <Compile Include="Internal\NodeFactory.cs" />
@@ -55,6 +53,8 @@
     <Compile Include="Nodes\RealNode.cs" />
     <Compile Include="Nodes\StringNode.cs" />
     <Compile Include="PListFormatException.cs" />
+    <Compile Include="Internal\BinaryFormatReader.cs" />
+    <Compile Include="Internal\BinaryFormatWriter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -76,7 +76,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Internal\" />
-    <Folder Include="Exceptions\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
