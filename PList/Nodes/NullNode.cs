@@ -1,6 +1,4 @@
 ﻿using System.IO;
-using PListNet.Exceptions;
-using PListNet.Internal;
 
 namespace PListNet.Nodes
 {

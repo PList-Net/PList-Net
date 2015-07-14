@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using PListNet.Exceptions;
 using PListNet.Nodes;
 
 namespace PListNet.Internal

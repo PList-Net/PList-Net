@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using PListNet.Exceptions;
 using PListNet.Nodes;
 
 namespace PListNet.Internal

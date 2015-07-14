@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using PListNet.Exceptions;
 using PListNet.Nodes;
 
 namespace PListNet.Internal
