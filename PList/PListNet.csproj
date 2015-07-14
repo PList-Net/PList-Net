@@ -41,8 +41,6 @@
     <Compile Include="Internal\PListBinaryReader.cs" />
     <Compile Include="Internal\PListBinaryWriter.cs" />
     <Compile Include="Internal\PListElement.cs" />
-    <Compile Include="Collections\PListArray.cs" />
-    <Compile Include="Collections\PListDict.cs" />
     <Compile Include="Exceptions\PListException.cs" />
     <Compile Include="Exceptions\PListFormatException.cs" />
     <Compile Include="PList.cs" />
@@ -57,6 +55,8 @@
     <Compile Include="Nodes\PListNull.cs" />
     <Compile Include="Nodes\PListReal.cs" />
     <Compile Include="Nodes\PListString.cs" />
+    <Compile Include="Nodes\PListArray.cs" />
+    <Compile Include="Nodes\PListDict.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
