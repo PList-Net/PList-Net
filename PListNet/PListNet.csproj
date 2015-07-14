@@ -72,7 +72,6 @@
     <None Include="PList.nuspec">
       <Link>Properties\PList.nuspec</Link>
     </None>
-    <None Include="Changes.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Internal\" />
