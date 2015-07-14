@@ -1,0 +1,1 @@
+..\..\nuget.exe pack PListNet.csproj -Build -Verbosity detailed -OutputDirectory ..
