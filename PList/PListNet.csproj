@@ -41,14 +41,6 @@
     <Compile Include="Internal\PListBinaryReader.cs" />
     <Compile Include="Internal\PListBinaryWriter.cs" />
     <Compile Include="Internal\PListElement.cs" />
-    <Compile Include="Primitives\PListBool.cs" />
-    <Compile Include="Primitives\PListData.cs" />
-    <Compile Include="Primitives\PListDate.cs" />
-    <Compile Include="Primitives\PListFill.cs" />
-    <Compile Include="Primitives\PListInteger.cs" />
-    <Compile Include="Primitives\PListNull.cs" />
-    <Compile Include="Primitives\PListReal.cs" />
-    <Compile Include="Primitives\PListString.cs" />
     <Compile Include="Collections\PListArray.cs" />
     <Compile Include="Collections\PListDict.cs" />
     <Compile Include="Exceptions\PListException.cs" />
@@ -57,6 +49,14 @@
     <Compile Include="PNode.cs" />
     <Compile Include="Internal\NodeFactory.cs" />
     <Compile Include="Internal\XmlFormatReader.cs" />
+    <Compile Include="Nodes\PListBool.cs" />
+    <Compile Include="Nodes\PListData.cs" />
+    <Compile Include="Nodes\PListDate.cs" />
+    <Compile Include="Nodes\PListFill.cs" />
+    <Compile Include="Nodes\PListInteger.cs" />
+    <Compile Include="Nodes\PListNull.cs" />
+    <Compile Include="Nodes\PListReal.cs" />
+    <Compile Include="Nodes\PListString.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
