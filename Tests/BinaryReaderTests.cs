@@ -4,12 +4,12 @@ using PListNet.Collections;
 namespace PListNet.Tests
 {
 	[TestFixture]
-	public class XmlReaderTests
+	public class BinaryReaderTests
 	{
 		[Test]
-		public void WhenParsingXmlDocumentWithSingleDictionary_ThenItIsParsedCorrectly()
+		public void WhenParsingBinaryDocumentWithSingleDictionary_ThenItIsParsedCorrectly()
 		{
-			using (var stream = TestFileHelper.GetTestFileStream("TestFiles/asdf-Info.plist"))
+			using (var stream = TestFileHelper.GetTestFileStream("TestFiles/asdf-Info.bin.plist"))
 			{
 				var node = PList.Load(stream);
 

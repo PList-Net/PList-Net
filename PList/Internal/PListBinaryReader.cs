@@ -14,18 +14,6 @@ namespace PListNet.Internal
 	internal class PListBinaryReader
 	{
 		/// <summary>
-		/// Gets the basestream.
-		/// </summary>
-		/// <value>The basestream.</value>
-		internal Stream BaseStream { get; private set; }
-
-		/// <summary>
-		/// Gets or sets the size of the element idx.
-		/// </summary>
-		/// <value>The size of the element idx.</value>
-		internal Byte ElementIdxSize { get; private set; }
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="PListBinaryReader"/> class.
 		/// </summary>
 		internal PListBinaryReader()
@@ -39,8 +27,6 @@ namespace PListNet.Internal
 		/// <returns>The <see cref="T:PListNet.PNode"/>, read from the specified stream</returns>
 		public PNode Read(Stream stream)
 		{
-			BaseStream = stream;
-
 			// read in file header
 			var header = ReadHeader(stream);
 
@@ -98,18 +84,6 @@ namespace PListNet.Internal
 		}
 
 		/// <summary>
-		/// Gets the current element type code.
-		/// </summary>
-		/// <value>The current element type code.</value>
-		internal Byte CurrentElementTypeCode { get; private set; }
-
-		/// <summary>
-		/// Gets the length of the current element.
-		/// </summary>
-		/// <value>The length of the current element.</value>
-		internal Int32 CurrentElementLength { get; private set; }
-
-		/// <summary>
 		/// Reads the <see cref="T:PListNet.PNode"/> at the specified idx.
 		/// </summary>
 		/// <param name="readerState">Reader state.</param>
@@ -150,12 +124,6 @@ namespace PListNet.Internal
 
 			var node = NodeFactory.Create(tag, objectLength);
 
-//			var tempElementTypeCode = CurrentElementTypeCode;
-//			var tempElementLength = CurrentElementLength;
-//
-//			CurrentElementTypeCode = tag;
-//			CurrentElementLength = objectLength;
-
 			// array and dictionary are special-cased here
 			// while primitives handle their own loading
 			var arrayNode = node as PListArray;
@@ -173,9 +141,6 @@ namespace PListNet.Internal
 			}
 
 			node.ReadBinary(readerState.Stream, objectLength);
-
-//			CurrentElementTypeCode = tempElementTypeCode;
-//			CurrentElementLength = tempElementLength;
 
 			return node;
 		}

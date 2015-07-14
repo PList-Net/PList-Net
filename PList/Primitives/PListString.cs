@@ -33,25 +33,30 @@ namespace PListNet.Primitives
 		private static HashSet<char> s_UTF8Chars = new HashSet<char>(Encoding.UTF8.GetChars(s_UTF8Bytes));
 
 		private string _value;
-		private bool _isUtf16;
 
 		/// <summary>
 		/// Gets the Xml tag of this element.
 		/// </summary>
 		/// <value>The Xml tag of this element.</value>
-		internal override string XmlTag { get { return _isUtf16 ? "ustring" : "string"; } }
+		internal override string XmlTag { get { return IsUtf16 ? "ustring" : "string"; } }
 
 		/// <summary>
 		/// Gets the binary typecode of this element.
 		/// </summary>
 		/// <value>The binary typecode of this element.</value>
-		internal override byte BinaryTag { get { return (byte) (_isUtf16 ? 6 : 5); } }
+		internal override byte BinaryTag { get { return (byte) (IsUtf16 ? 6 : 5); } }
 
 		/// <summary>
 		/// Gets the length of this PList element.
 		/// </summary>
 		/// <returns>The length of this PList element.</returns>
 		internal override int BinaryLength { get { return Value.Length; } }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is UTF16.
+		/// </summary>
+		/// <value><c>true</c> if this instance is UTF16; otherwise, <c>false</c>.</value>
+		internal bool IsUtf16 { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PListString"/> class.
@@ -84,11 +89,11 @@ namespace PListNet.Primitives
 				{
 					if (!s_UTF8Chars.Contains(c))
 					{
-						_isUtf16 = true;
+						IsUtf16 = true;
 						return;
 					}
 				}
-				_isUtf16 = false;
+				IsUtf16 = false;
 			}
 		}
 
@@ -117,16 +122,15 @@ namespace PListNet.Primitives
 		/// </summary>
 		internal override void ReadBinary(Stream stream, int nodeLength)
 		{
-
 			var buf = new byte[nodeLength * (BinaryTag == 5 ? 1 : 2)];
 			if (stream.Read(buf, 0, buf.Length) != buf.Length)
 			{
 				throw new PListFormatException();
 			}
 
-			var enc = BinaryTag == 5 ? Encoding.UTF8 : Encoding.BigEndianUnicode;
+			var encoding = BinaryTag == 5 ? Encoding.UTF8 : Encoding.BigEndianUnicode;
 
-			Value = enc.GetString(buf);
+			Value = encoding.GetString(buf);
 		}
 
 		/// <summary>
@@ -134,8 +138,8 @@ namespace PListNet.Primitives
 		/// </summary>
 		internal override void WriteBinary(Stream stream)
 		{
-			Encoding enc = _isUtf16 ? Encoding.BigEndianUnicode : Encoding.UTF8;
-			Byte[] buf = enc.GetBytes(Value);
+			Encoding enc = IsUtf16 ? Encoding.BigEndianUnicode : Encoding.UTF8;
+			var buf = enc.GetBytes(Value);
 			stream.Write(buf, 0, buf.Length);
 		}
 	}

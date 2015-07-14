@@ -5,6 +5,7 @@ using System.Net;
 using PListNet.Exceptions;
 using PListNet.Primitives;
 using PListNet.Collections;
+using System.Linq;
 
 namespace PListNet.Internal
 {
@@ -23,12 +24,6 @@ namespace PListNet.Internal
 		private readonly Dictionary<byte, Dictionary<PNode, int>> _uniqueElements = new Dictionary<byte, Dictionary<PNode, int>>();
 
 		/// <summary>
-		/// Gets the offset table.
-		/// </summary>
-		/// <value>The offset table.</value>
-		internal List<Int32> Offsets { get; private set; }
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="PListBinaryWriter"/> class.
 		/// </summary>
 		internal PListBinaryWriter()
@@ -44,8 +39,7 @@ namespace PListNet.Internal
 		{
 			stream.Write(_header, 0, _header.Length);
 
-			Offsets = new List<int>();
-
+			var offsets = new List<int>();
 			int nodeCount = GetNodeCount(node);
 
 			byte nodeIndexSize;
@@ -53,8 +47,8 @@ namespace PListNet.Internal
 			else if (nodeCount <= Int16.MaxValue) nodeIndexSize = sizeof(Int16);
 			else nodeIndexSize = sizeof(Int32);
 
-			int topOffestIdx = WriteInternal(stream, node);
-			nodeCount = Offsets.Count;
+			int topOffestIdx = WriteInternal(stream, nodeIndexSize, offsets, node);
+			nodeCount = offsets.Count;
             
 			int offsetTableOffset = (int) stream.Position;
 
@@ -64,19 +58,19 @@ namespace PListNet.Internal
 			else if (offsetTableOffset <= Int16.MaxValue) offsetSize = sizeof(Int16);
 			else offsetSize = sizeof(Int32);
 
-			for (int i = 0; i < Offsets.Count; i++)
+			for (int i = 0; i < offsets.Count; i++)
 			{
 				byte[] buf = null;
 				switch (offsetSize)
 				{
 					case 1:
-						buf = new [] { (byte) Offsets[i] };
+						buf = new [] { (byte) offsets[i] };
 						break;
 					case 2:
-						buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((Int16) Offsets[i]));
+						buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((Int16) offsets[i]));
 						break;
 					case 4:
-						buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(Offsets[i]));
+						buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(offsets[i]));
 						break;
 				}
 				stream.Write(buf, 0, buf.Length);
@@ -94,40 +88,16 @@ namespace PListNet.Internal
 		}
 
 		/// <summary>
-		/// Formats an element idx based on the ElementIdxSize.
-		/// </summary>
-		/// <param name="idx">The idx.</param>
-		/// <param name="nodeIndexSize">The node index size.</param>
-		/// <returns>The formated idx.</returns>
-		internal Byte[] FormatIdx(int idx, int nodeIndexSize)
-		{
-			byte[] res;
-			switch (nodeIndexSize)
-			{
-				case 1:
-					res = new [] { (byte) idx };
-					break;
-				case 2:
-					res = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((Int16) idx));
-					break;
-				case 4:
-					res = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(idx));
-					break;
-				default:
-					throw new PListFormatException("Invalid node index size.");
-			}
-			return res;
-		}
-
-		/// <summary>
 		/// Writers a <see cref="T:PListNet.PNode"/> to the current stream position
 		/// </summary>
 		/// <param name="stream">The stream.</param>
+		/// <param name="nodeIndexSize">The node index size.</param>
+		/// <param name="offsets">Node offsets.</param>
 		/// <param name="node">The PList node.</param>
 		/// <returns>The Idx of the written node</returns>
-		internal int WriteInternal(Stream stream, PNode node)
+		internal int WriteInternal(Stream stream, byte nodeIndexSize, List<int> offsets, PNode node)
 		{
-			int elementIdx = Offsets.Count;
+			int elementIdx = offsets.Count;
 			if (node.IsBinaryUnique && node is IEquatable<PNode>)
 			{
 				if (!_uniqueElements.ContainsKey(node.BinaryTag)) _uniqueElements.Add(node.BinaryTag, new Dictionary<PNode, int>());
@@ -140,7 +110,7 @@ namespace PListNet.Internal
 			}
 
 			int offset = (int) stream.Position;
-			Offsets.Add(offset);
+			offsets.Add(offset);
 			int len = node.BinaryLength;
 			var typeCode = (byte) (node.BinaryTag << 4 | (len < 0x0F ? len : 0x0F));
 			stream.WriteByte(typeCode);
@@ -155,13 +125,14 @@ namespace PListNet.Internal
 			var arrayNode = node as PListArray;
 			if (arrayNode != null)
 			{
-				WriteInternal(stream, arrayNode);
+				WriteInternal(stream, nodeIndexSize, offsets, arrayNode);
 				return elementIdx;
 			}
 
-			if (node is PListDict)
+			var dictionaryNode = node as PListDict;
+			if (dictionaryNode != null)
 			{
-				//
+				WriteInternal(stream, nodeIndexSize, offsets, dictionaryNode);
 				return elementIdx;
 			}
 				
@@ -169,7 +140,7 @@ namespace PListNet.Internal
 			return elementIdx;
 		}
 
-		private void WriteInternal(Stream stream, int nodeIndexSize, PListArray array)
+		private void WriteInternal(Stream stream, byte nodeIndexSize, List<int> offsets, PListArray array)
 		{
 			var nodes = new byte[nodeIndexSize * array.Count];
 			var streamPos = stream.Position;
@@ -177,7 +148,7 @@ namespace PListNet.Internal
 			stream.Write(nodes, 0, nodes.Length);
 			for (int i = 0; i < array.Count; i++)
 			{
-				int elementIdx = WriteInternal(stream, array[i]);
+				int elementIdx = WriteInternal(stream, nodeIndexSize, offsets, array[i]);
 				FormatIdx(elementIdx, nodeIndexSize).CopyTo(nodes, nodeIndexSize * i);
 			}
 
@@ -186,30 +157,85 @@ namespace PListNet.Internal
 			stream.Seek(0, SeekOrigin.End);
 		}
 
+		private void WriteInternal(Stream stream, byte nodeIndexSize, List<int> offsets, PListDict dictionary)
+		{
+			var keys = new Byte[nodeIndexSize * dictionary.Count];
+			var values = new Byte[nodeIndexSize * dictionary.Count];
+			long streamPos = stream.Position;
+			stream.Write(keys, 0, keys.Length);
+			stream.Write(values, 0, values.Length);
+
+			KeyValuePair<String, PNode>[] elems = dictionary.ToArray();
+
+			for (int i = 0; i < dictionary.Count; i++)
+			{
+				int elementIdx = WriteInternal(stream, nodeIndexSize, offsets, NodeFactory.CreateKeyElement(elems[i].Key));
+				FormatIdx(elementIdx, nodeIndexSize).CopyTo(keys, nodeIndexSize * i);
+			}
+			for (int i = 0; i < dictionary.Count; i++)
+			{
+				int elementIdx = WriteInternal(stream, nodeIndexSize, offsets, elems[i].Value);
+				FormatIdx(elementIdx, nodeIndexSize).CopyTo(values, nodeIndexSize * i);
+			}
+
+			stream.Seek(streamPos, SeekOrigin.Begin);
+			stream.Write(keys, 0, keys.Length);
+			stream.Write(values, 0, values.Length);
+			stream.Seek(0, SeekOrigin.End);
+		}
+
 		private static int GetNodeCount(PNode node)
 		{
+			if (node == null) throw new ArgumentNullException("node");
+
+			// special case: array
+			var array = node as PListArray;
+			if (array != null)
+			{
+				var count = 1;
+				foreach (var subNode in array)
+				{
+					count += GetNodeCount(subNode);
+				}
+				return count;
+			}
+
+			// special case: dictionary
+			var dictionary = node as PListDict;
+			if (dictionary != null)
+			{
+				var count = 1;
+				foreach (var subNode in dictionary.Values)
+				{
+					count += GetNodeCount(subNode);
+				}
+				count += dictionary.Keys.Count;
+				return count;
+			}
+
+			// normal case
 			return 1;
 		}
 
-		private static int GetNodeCount(PListArray array)
+		/// <summary>
+		/// Formats a node index based on the size.
+		/// </summary>
+		/// <param name="index">The index.</param>
+		/// <param name="nodeIndexSize">The node index size.</param>
+		/// <returns>The formated idx.</returns>
+		private static byte[] FormatIdx(int index, byte nodeIndexSize)
 		{
-			int count = 1;
-			foreach (var node in array)
+			switch (nodeIndexSize)
 			{
-				count += GetNodeCount(node);
+				case 1:
+					return new [] { (Byte) index };
+				case 2:
+					return BitConverter.GetBytes(IPAddress.HostToNetworkOrder((Int16) index));
+				case 4:
+					return BitConverter.GetBytes(IPAddress.HostToNetworkOrder(index));
+				default:
+					throw new PListFormatException("Invalid node index size");
 			}
-			return count;
-		}
-
-		private static int GetNodeCount(IDictionary<string, PNode> dictionary)
-		{
-			int count = 1;
-			foreach (var node in dictionary.Values)
-			{
-				count += GetNodeCount(node);
-			}
-			count += dictionary.Keys.Count;
-			return count;
 		}
 	}
 }

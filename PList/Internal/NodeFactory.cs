@@ -71,6 +71,8 @@ namespace PListNet.Internal
 			if (binaryTag == 0 && length == 0x00) return new PListNull();
 			if (binaryTag == 0 && length == 0x0F) return new PListFill();
 
+			if (binaryTag == 6) return new PListString { IsUtf16 = true };
+
 			if (_binaryTags.ContainsKey(binaryTag))
 			{
 				return (PNode) Activator.CreateInstance(_binaryTags[binaryTag]);

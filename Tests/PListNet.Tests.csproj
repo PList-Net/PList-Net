@@ -37,6 +37,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlReaderTests.cs" />
     <Compile Include="TestFileHelper.cs" />
+    <Compile Include="BinaryReaderTests.cs" />
+    <Compile Include="BinaryWriterTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -47,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestFiles\asdf-Info.plist" />
+    <EmbeddedResource Include="TestFiles\asdf-Info.bin.plist" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PList\PListNet.csproj">
