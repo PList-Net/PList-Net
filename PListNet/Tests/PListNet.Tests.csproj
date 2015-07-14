@@ -30,7 +30,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -52,7 +52,7 @@
     <EmbeddedResource Include="TestFiles\asdf-Info.bin.plist" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PList\PListNet.csproj">
+    <ProjectReference Include="..\PListNet.csproj">
       <Project>{C1154025-FCAB-40AF-A715-91D10420C321}</Project>
       <Name>PListNet</Name>
     </ProjectReference>
