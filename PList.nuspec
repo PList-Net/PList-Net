@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>plist.net</id>
+    <version>2.0</version>
+    <title>PListNet</title>
+    <authors>Michael Teper, Christian Ecker</authors>
+    <owners>Vijay Santhanam, Christian Ecker, Michael Teper</owners>
+    <licenseUrl>http://www.opensource.org/licenses/bsd-license.php</licenseUrl>
+    <projectUrl>https://github.com/PList-Net/PList-Net</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>.Net Library for working with Apple *.plist files.</description>
+    <tags>Apple PList iPhone iOS iPad OSX Cocoa</tags>
+    <releaseNotes>
+    	Version 2.0 is a major refactoring and cleanup. The API surface has been reduced and unit tests added.
+    	The original project appears to be abandoned on Google Code, this version continues from where work
+    	has been left off over on GitHub. 
+    </releaseNotes>
+  </metadata>
+</package>
