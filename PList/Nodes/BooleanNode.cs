@@ -3,12 +3,12 @@ using System.IO;
 using System.Xml;
 using PListNet.Exceptions;
 
-namespace PListNet.Primitives
+namespace PListNet.Nodes
 {
 	/// <summary>
 	/// Represents a Boolean Value from a PList
 	/// </summary>
-	public class PListBool : PNode<bool>
+	public class BooleanNode : PNode<bool>
 	{
 		/// <summary>
 		/// Gets the Xml tag of this element.
@@ -33,17 +33,17 @@ namespace PListNet.Primitives
 		internal override bool IsBinaryUnique { get { return true; } }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PListBool"/> class.
+		/// Initializes a new instance of the <see cref="BooleanNode"/> class.
 		/// </summary>
-		public PListBool()
+		public BooleanNode()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PListBool"/> class.
+		/// Initializes a new instance of the <see cref="BooleanNode"/> class.
 		/// </summary>
 		/// <param name="value">The Value of this element</param>
-		public PListBool(Boolean value)
+		public BooleanNode(Boolean value)
 		{
 			Value = value;
 		}

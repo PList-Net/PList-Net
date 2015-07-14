@@ -4,12 +4,12 @@ using System.IO;
 using System.Text;
 using PListNet.Exceptions;
 
-namespace PListNet.Primitives
+namespace PListNet.Nodes
 {
 	/// <summary>
 	/// Represents an string Value from a PList 
 	/// </summary>
-	public class PListString : PNode<string>
+	public class StringNode : PNode<string>
 	{
 		private static byte[] s_UTF8Bytes = { 
 			0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
@@ -59,17 +59,17 @@ namespace PListNet.Primitives
 		internal bool IsUtf16 { get; set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PListString"/> class.
+		/// Initializes a new instance of the <see cref="StringNode"/> class.
 		/// </summary>
-		public PListString()
+		public StringNode()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PListString"/> class.
+		/// Initializes a new instance of the <see cref="StringNode"/> class.
 		/// </summary>
 		/// <param name="value">The value.</param>
-		public PListString(string value)
+		public StringNode(string value)
 		{
 			Value = value;
 		}

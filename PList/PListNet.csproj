@@ -40,23 +40,22 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internal\PListBinaryReader.cs" />
     <Compile Include="Internal\PListBinaryWriter.cs" />
-    <Compile Include="Internal\PListElement.cs" />
     <Compile Include="Exceptions\PListException.cs" />
     <Compile Include="Exceptions\PListFormatException.cs" />
     <Compile Include="PList.cs" />
     <Compile Include="PNode.cs" />
     <Compile Include="Internal\NodeFactory.cs" />
     <Compile Include="Internal\XmlFormatReader.cs" />
-    <Compile Include="Nodes\PListBool.cs" />
-    <Compile Include="Nodes\PListData.cs" />
-    <Compile Include="Nodes\PListDate.cs" />
-    <Compile Include="Nodes\PListFill.cs" />
-    <Compile Include="Nodes\PListInteger.cs" />
-    <Compile Include="Nodes\PListNull.cs" />
-    <Compile Include="Nodes\PListReal.cs" />
-    <Compile Include="Nodes\PListString.cs" />
-    <Compile Include="Nodes\PListArray.cs" />
-    <Compile Include="Nodes\PListDict.cs" />
+    <Compile Include="Nodes\ArrayNode.cs" />
+    <Compile Include="Nodes\BooleanNode.cs" />
+    <Compile Include="Nodes\DataNode.cs" />
+    <Compile Include="Nodes\DateNode.cs" />
+    <Compile Include="Nodes\DictionaryNode.cs" />
+    <Compile Include="Nodes\FillNode.cs" />
+    <Compile Include="Nodes\IntegerNode.cs" />
+    <Compile Include="Nodes\NullNode.cs" />
+    <Compile Include="Nodes\RealNode.cs" />
+    <Compile Include="Nodes\StringNode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

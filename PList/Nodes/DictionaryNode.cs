@@ -4,12 +4,12 @@ using System.IO;
 using System.Xml;
 using PListNet.Internal;
 
-namespace PListNet.Collections
+namespace PListNet.Nodes
 {
 	/// <summary>
 	/// Represents an dictionary with <see cref="T:System.String"/> keys and <see cref="T:PListNet.PNode"/> values
 	/// </summary>
-	public class PListDict : PNode, IDictionary<string, PNode>
+	public class DictionaryNode : PNode, IDictionary<string, PNode>
 	{
 		private readonly IDictionary<string, PNode> _dictionary = new Dictionary<string, PNode>();
 
@@ -72,7 +72,7 @@ namespace PListNet.Collections
 				string key = reader.ReadString();
 				reader.ReadEndElement();
 
-				var xmlType = reader.MoveToContent();
+				reader.MoveToContent();
 				var node = NodeFactory.Create(reader.LocalName);
 				node.ReadXml(reader);
 				Add(key, node);
@@ -105,37 +105,69 @@ namespace PListNet.Collections
 
 		#region IDictionary implementation
 
+		/// <summary>
+		/// Determines whether the current instance contains an entry with the specified key.
+		/// </summary>
+		/// <returns><c>true</c>, if key was containsed, <c>false</c> otherwise.</returns>
+		/// <param name="key">Key.</param>
 		public bool ContainsKey(string key)
 		{
 			return _dictionary.ContainsKey(key);
 		}
 
+		/// <summary>
+		/// Add the specified value with specified key.
+		/// </summary>
+		/// <param name="key">Key.</param>
+		/// <param name="value">Value.</param>
 		public void Add(string key, PNode value)
 		{
 			_dictionary.Add(key, value);
 		}
 
+		/// <summary>
+		/// Remove value at the specified key.
+		/// </summary>
+		/// <param name="key">Key.</param>
 		public bool Remove(string key)
 		{
 			return _dictionary.Remove(key);
 		}
 
+		/// <summary>
+		/// Attempts to retrieve value at the specified key.
+		/// </summary>
+		/// <returns><c>true</c>, if key was found, <c>false</c> otherwise.</returns>
+		/// <param name="key">Key.</param>
+		/// <param name="value">Value.</param>
 		public bool TryGetValue(string key, out PNode value)
 		{
 			return _dictionary.TryGetValue(key, out value);
 		}
 
+		/// <summary>
+		/// Gets or sets the <see cref="PListNet.PNode"/> at the specified index.
+		/// </summary>
+		/// <param name="index">Index.</param>
 		public PNode this[string index]
 		{
 			get { return _dictionary[index]; }
 			set { _dictionary[index] = value; }
 		}
 
+		/// <summary>
+		/// Gets the keys.
+		/// </summary>
+		/// <value>The keys.</value>
 		public ICollection<string> Keys
 		{
 			get { return _dictionary.Keys; }
 		}
 
+		/// <summary>
+		/// Gets the values.
+		/// </summary>
+		/// <value>The values.</value>
 		public ICollection<PNode> Values
 		{
 			get { return _dictionary.Values; }
@@ -145,36 +177,64 @@ namespace PListNet.Collections
 
 		#region ICollection implementation
 
+		/// <summary>
+		/// Add the specified key/value pair.
+		/// </summary>
+		/// <param name="item">Item.</param>
 		public void Add(KeyValuePair<string, PNode> item)
 		{
 			_dictionary.Add(item);
 		}
 
+		/// <summary>
+		/// Clear this instance.
+		/// </summary>
 		public void Clear()
 		{
 			_dictionary.Clear();
 		}
 
+		/// <summary>
+		/// Contains the specified key/value pair.
+		/// </summary>
+		/// <param name="item">Item.</param>
 		public bool Contains(KeyValuePair<string, PNode> item)
 		{
 			return _dictionary.Contains(item);
 		}
 
+		/// <summary>
+		/// Copies values.
+		/// </summary>
+		/// <param name="array">Array.</param>
+		/// <param name="arrayIndex">Array index.</param>
 		public void CopyTo(KeyValuePair<string, PNode>[] array, int arrayIndex)
 		{
 			_dictionary.CopyTo(array, arrayIndex);
 		}
 
+		/// <summary>
+		/// Remove the specified key/value pair.
+		/// </summary>
+		/// <param name="item">Item.</param>
 		public bool Remove(KeyValuePair<string, PNode> item)
 		{
 			return _dictionary.Remove(item);
 		}
 
+		/// <summary>
+		/// Gets the count.
+		/// </summary>
+		/// <value>The count.</value>
 		public int Count
 		{
 			get { return _dictionary.Count; }
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is read only.
+		/// </summary>
+		/// <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
 		public bool IsReadOnly
 		{
 			get { return false; }
@@ -184,6 +244,10 @@ namespace PListNet.Collections
 
 		#region IEnumerable implementation
 
+		/// <summary>
+		/// Gets the enumerator.
+		/// </summary>
+		/// <returns>The enumerator.</returns>
 		public IEnumerator<KeyValuePair<string, PNode>> GetEnumerator()
 		{
 			return _dictionary.GetEnumerator();
@@ -193,6 +257,10 @@ namespace PListNet.Collections
 
 		#region IEnumerable implementation
 
+		/// <summary>
+		/// Gets the enumerator.
+		/// </summary>
+		/// <returns>The enumerator.</returns>
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			return _dictionary.GetEnumerator();

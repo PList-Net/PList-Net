@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using PListNet.Exceptions;
-using PListNet.Primitives;
-using PListNet.Collections;
-using System.Linq;
+using PListNet.Nodes;
 
 namespace PListNet.Internal
 {
@@ -104,7 +103,7 @@ namespace PListNet.Internal
 				if (!_uniqueElements[node.BinaryTag].ContainsKey(node)) _uniqueElements[node.BinaryTag][node] = elementIdx;
 				else
 				{
-					if (node is PListBool) elementIdx = _uniqueElements[node.BinaryTag][node];
+					if (node is BooleanNode) elementIdx = _uniqueElements[node.BinaryTag][node];
 					else return _uniqueElements[node.BinaryTag][node];
 				}
 			}
@@ -122,14 +121,14 @@ namespace PListNet.Internal
 				extLen.WriteBinary(stream);
 			}
 
-			var arrayNode = node as PListArray;
+			var arrayNode = node as ArrayNode;
 			if (arrayNode != null)
 			{
 				WriteInternal(stream, nodeIndexSize, offsets, arrayNode);
 				return elementIdx;
 			}
 
-			var dictionaryNode = node as PListDict;
+			var dictionaryNode = node as DictionaryNode;
 			if (dictionaryNode != null)
 			{
 				WriteInternal(stream, nodeIndexSize, offsets, dictionaryNode);
@@ -140,7 +139,7 @@ namespace PListNet.Internal
 			return elementIdx;
 		}
 
-		private void WriteInternal(Stream stream, byte nodeIndexSize, List<int> offsets, PListArray array)
+		private void WriteInternal(Stream stream, byte nodeIndexSize, List<int> offsets, ArrayNode array)
 		{
 			var nodes = new byte[nodeIndexSize * array.Count];
 			var streamPos = stream.Position;
@@ -157,7 +156,7 @@ namespace PListNet.Internal
 			stream.Seek(0, SeekOrigin.End);
 		}
 
-		private void WriteInternal(Stream stream, byte nodeIndexSize, List<int> offsets, PListDict dictionary)
+		private void WriteInternal(Stream stream, byte nodeIndexSize, List<int> offsets, DictionaryNode dictionary)
 		{
 			var keys = new Byte[nodeIndexSize * dictionary.Count];
 			var values = new Byte[nodeIndexSize * dictionary.Count];
@@ -189,7 +188,7 @@ namespace PListNet.Internal
 			if (node == null) throw new ArgumentNullException("node");
 
 			// special case: array
-			var array = node as PListArray;
+			var array = node as ArrayNode;
 			if (array != null)
 			{
 				var count = 1;
@@ -201,7 +200,7 @@ namespace PListNet.Internal
 			}
 
 			// special case: dictionary
-			var dictionary = node as PListDict;
+			var dictionary = node as DictionaryNode;
 			if (dictionary != null)
 			{
 				var count = 1;

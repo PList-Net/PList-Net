@@ -1,19 +1,20 @@
 ﻿using System.IO;
 using PListNet.Exceptions;
+using PListNet.Internal;
 
-namespace PListNet.Primitives
+namespace PListNet.Nodes
 {
 	/// <summary>
-	/// Represents a fill element in a PList
+	/// Represents a null element in a PList
 	/// </summary>
 	/// <remarks>Is skipped in Xml-Serialization</remarks>
-	public class PListFill : PNode
+	public class NullNode : PNode
 	{
 		/// <summary>
 		/// Gets the Xml tag of this element.
 		/// </summary>
 		/// <value>The Xml tag of this element.</value>
-		internal override string XmlTag { get { return "fill"; } }
+		internal override string XmlTag { get { return "null"; } }
 
 		/// <summary>
 		/// Gets the binary typecode of this element.
@@ -21,10 +22,7 @@ namespace PListNet.Primitives
 		/// <value>The binary typecode of this element.</value>
 		internal override byte BinaryTag { get { return 0; } }
 
-		/// <summary>
-		/// Gets the length of this PList node.
-		/// </summary>
-		internal override int BinaryLength { get { return 0x0F; } }
+		internal override int BinaryLength { get { return 0; } }
 
 		/// <summary>
 		/// Gets a value indicating whether this instance is written only once in binary mode.
@@ -39,27 +37,17 @@ namespace PListNet.Primitives
 		/// </summary>
 		internal override void ReadBinary(Stream stream, int nodeLength)
 		{
-			if (nodeLength != 0x0F) throw new PListFormatException();
+			if (nodeLength != 0x00)
+			{
+				throw new PListFormatException();
+			}
 		}
 
 		/// <summary>
-		/// Writes this node binary to the writer.
+		/// Writes this element binary to the writer.
 		/// </summary>
 		internal override void WriteBinary(Stream stream)
 		{
-		}
-
-		#region IXmlSerializable Members
-
-		/// <summary>
-		/// This method is reserved and should not be used. When implementing the IXmlSerializable interface, you should return null (Nothing in Visual Basic) from this method, and instead, if specifying a custom schema is required, apply the <see cref="T:System.Xml.Serialization.XmlSchemaProviderAttribute"/> to the class.
-		/// </summary>
-		/// <returns>
-		/// An <see cref="T:System.Xml.Schema.XmlSchema"/> that describes the XML representation of the object that is produced by the <see cref="M:System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter)"/> method and consumed by the <see cref="M:System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader)"/> method.
-		/// </returns>
-		public System.Xml.Schema.XmlSchema GetSchema()
-		{
-			return null;
 		}
 
 		/// <summary>
@@ -80,8 +68,5 @@ namespace PListNet.Primitives
 			writer.WriteStartElement(XmlTag);
 			writer.WriteEndElement();
 		}
-
-		#endregion
-
 	}
 }

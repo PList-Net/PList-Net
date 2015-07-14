@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using PListNet.Collections;
 using PListNet.Exceptions;
-using PListNet.Primitives;
+using PListNet.Nodes;
 
 namespace PListNet.Internal
 {
@@ -19,19 +18,19 @@ namespace PListNet.Internal
 		/// </summary>
 		static NodeFactory()
 		{
-			Register(new PListDict());
-			Register(new PListInteger());
-			Register(new PListReal());
-			Register(new PListString());
-			Register(new PListArray());
-			Register(new PListData());
-			Register(new PListDate());
+			Register(new DictionaryNode());
+			Register(new IntegerNode());
+			Register(new RealNode());
+			Register(new StringNode());
+			Register(new ArrayNode());
+			Register(new DataNode());
+			Register(new DateNode());
 
-			Register("string", 5, new PListString());
-			Register("ustring", 6, new PListString());
+			Register("string", 5, new StringNode());
+			Register("ustring", 6, new StringNode());
 
-			Register("true", 0, new PListBool());
-			Register("false", 0, new PListBool());
+			Register("true", 0, new BooleanNode());
+			Register("false", 0, new BooleanNode());
 		}
 
 		/// <summary>
@@ -68,10 +67,10 @@ namespace PListNet.Internal
 		/// <returns>The created <see cref="T:PListNet.PNode"/> object</returns>
 		public static PNode Create(byte binaryTag, int length)
 		{
-			if (binaryTag == 0 && length == 0x00) return new PListNull();
-			if (binaryTag == 0 && length == 0x0F) return new PListFill();
+			if (binaryTag == 0 && length == 0x00) return new NullNode();
+			if (binaryTag == 0 && length == 0x0F) return new FillNode();
 
-			if (binaryTag == 6) return new PListString { IsUtf16 = true };
+			if (binaryTag == 6) return new StringNode { IsUtf16 = true };
 
 			if (_binaryTags.ContainsKey(binaryTag))
 			{
@@ -103,7 +102,7 @@ namespace PListNet.Internal
 		/// <returns>The <see cref="T:PListNet.PNode"/> object used for exteded length information.</returns>
 		public static PNode CreateLengthElement(int length)
 		{
-			return new PListInteger(length);
+			return new IntegerNode(length);
 		}
 
 		/// <summary>
@@ -113,7 +112,7 @@ namespace PListNet.Internal
 		/// <returns>The <see cref="T:PListNet.PNode"/> object used for dictionary keys.</returns>
 		public static PNode CreateKeyElement(string key)
 		{
-			return new PListString(key);
+			return new StringNode(key);
 		}
 	}
 }

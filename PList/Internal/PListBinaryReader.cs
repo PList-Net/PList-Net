@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using PListNet.Collections;
 using PListNet.Exceptions;
-using PListNet.Primitives;
+using PListNet.Nodes;
 
 namespace PListNet.Internal
 {
@@ -114,26 +113,26 @@ namespace PListNet.Internal
 			if (tag != 0 && objectLength == 0x0F)
 			{
 				var lengthNode = ReadInternal(readerState);
-				if (!(lengthNode is PListInteger))
+				if (!(lengthNode is IntegerNode))
 				{
 					throw new PListFormatException("Length is not an integer.");
 				}
 
-				objectLength = (int) ((PListInteger) lengthNode).Value;
+				objectLength = (int) ((IntegerNode) lengthNode).Value;
 			}
 
 			var node = NodeFactory.Create(tag, objectLength);
 
 			// array and dictionary are special-cased here
 			// while primitives handle their own loading
-			var arrayNode = node as PListArray;
+			var arrayNode = node as ArrayNode;
 			if (arrayNode != null)
 			{
 				ReadInArray(arrayNode, objectLength, readerState);
 				return node;
 			}
 
-			var dictionaryNode = node as PListDict;
+			var dictionaryNode = node as DictionaryNode;
 			if (dictionaryNode != null)
 			{
 				ReadInDictionary(dictionaryNode, objectLength, readerState);
@@ -184,7 +183,7 @@ namespace PListNet.Internal
 					: IPAddress.NetworkToHostOrder(BitConverter.ToInt16(bufKeys, 2 * i));
 				var plKey = ReadInternal(readerState, topNode);
 
-				var stringKey = plKey as PListString;
+				var stringKey = plKey as StringNode;
 				if (stringKey == null)
 				{
 					throw new PListFormatException("Key is not a string");

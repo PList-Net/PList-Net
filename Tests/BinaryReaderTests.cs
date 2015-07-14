@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using PListNet.Collections;
+using PListNet.Nodes;
 
 namespace PListNet.Tests
 {
@@ -15,7 +15,7 @@ namespace PListNet.Tests
 
 				Assert.IsNotNull(node);
 
-				var dictionary = node as PListDict;
+				var dictionary = node as DictionaryNode;
 				Assert.IsNotNull(dictionary);
 
 				Assert.AreEqual(14, dictionary.Count);

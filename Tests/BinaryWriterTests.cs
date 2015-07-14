@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using NUnit.Framework;
-using PListNet.Collections;
+using PListNet.Nodes;
 
 namespace PListNet.Tests
 {
@@ -25,8 +25,8 @@ namespace PListNet.Tests
 					// compare
 					Assert.AreEqual(node.GetType().Name, newNode.GetType().Name);
 
-					var oldDict = node as PListDict;
-					var newDict = newNode as PListDict;
+					var oldDict = node as DictionaryNode;
+					var newDict = newNode as DictionaryNode;
 
 					Assert.AreEqual(oldDict.Count, newDict.Count);
 

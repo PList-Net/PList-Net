@@ -38,6 +38,9 @@ namespace PListNet
 		internal abstract void WriteBinary(Stream stream);
 	}
 
+	/// <summary>
+	/// PList node.
+	/// </summary>
 	public abstract class PNode<T> : PNode, IEquatable<PNode>
 	{
 		/// <summary>

@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using System.Xml.Schema;
 using PListNet.Internal;
 
-namespace PListNet.Collections
+namespace PListNet.Nodes
 {
 	/// <summary>
 	/// Represents an array of an <see cref="T:PListNet.PNode"/> objects
 	/// </summary>
-	public class PListArray : PNode, IList<PNode>
+	public class ArrayNode : PNode, IList<PNode>
 	{
 		private readonly IList<PNode> _list = new List<PNode>();
 
@@ -86,21 +85,40 @@ namespace PListNet.Collections
 		}
 
 		#region IList implementation
+
+		/// <summary>
+		/// Determines the index of a specific item in the current instance.
+		/// </summary>
+		/// <returns>The index.</returns>
+		/// <param name="item">Item.</param>
 		public int IndexOf(PNode item)
 		{
 			return _list.IndexOf(item);
 		}
 
+		/// <summary>
+		/// Insert the specified item at index.
+		/// </summary>
+		/// <param name="index">Index.</param>
+		/// <param name="item">Item.</param>
 		public void Insert(int index, PNode item)
 		{
 			_list.Insert(index, item);
 		}
 
+		/// <summary>
+		/// Removes the item at index.
+		/// </summary>
+		/// <param name="index">Index.</param>
 		public void RemoveAt(int index)
 		{
 			_list.RemoveAt(index);
 		}
 
+		/// <summary>
+		/// Gets or sets the <see cref="PListNet.PNode"/> at the specified index.
+		/// </summary>
+		/// <param name="index">Index.</param>
 		public PNode this[int index]
 		{
 			get { return _list[index]; }
@@ -109,36 +127,64 @@ namespace PListNet.Collections
 		#endregion
 
 		#region ICollection implementation
+		/// <summary>
+		/// Add the specified item.
+		/// </summary>
+		/// <param name="item">Item.</param>
 		public void Add(PNode item)
 		{
 			_list.Add(item);
 		}
 
+		/// <summary>
+		/// Clear this instance.
+		/// </summary>
 		public void Clear()
 		{
 			_list.Clear();
 		}
 
+		/// <summary>
+		/// Determines whether the current collection contains a specific value.
+		/// </summary>
+		/// <param name="item">Item.</param>
 		public bool Contains(PNode item)
 		{
 			return _list.Contains(item);
 		}
 
+		/// <summary>
+		/// Copies array.
+		/// </summary>
+		/// <param name="array">Array.</param>
+		/// <param name="arrayIndex">Array index.</param>
 		public void CopyTo(PNode[] array, int arrayIndex)
 		{
 			_list.CopyTo(array, arrayIndex);
 		}
 
+		/// <summary>
+		/// Remove the specified item.
+		/// </summary>
+		/// <param name="item">Item.</param>
 		public bool Remove(PNode item)
 		{
 			return _list.Remove(item);
 		}
 
+		/// <summary>
+		/// Gets the count.
+		/// </summary>
+		/// <value>The count.</value>
 		public int Count
 		{
 			get { return _list.Count; }
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is read only.
+		/// </summary>
+		/// <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
 		public bool IsReadOnly
 		{
 			get { return false; }
@@ -146,6 +192,10 @@ namespace PListNet.Collections
 		#endregion
 
 		#region IEnumerable implementation
+		/// <summary>
+		/// Gets the enumerator.
+		/// </summary>
+		/// <returns>The enumerator.</returns>
 		public IEnumerator<PNode> GetEnumerator()
 		{
 			return _list.GetEnumerator();
@@ -153,6 +203,10 @@ namespace PListNet.Collections
 		#endregion
 
 		#region IEnumerable implementation
+		/// <summary>
+		/// Gets the enumerator.
+		/// </summary>
+		/// <returns>The enumerator.</returns>
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			return _list.GetEnumerator();

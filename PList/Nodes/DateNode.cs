@@ -5,12 +5,12 @@ using System.IO;
 using System.Linq;
 using PListNet.Exceptions;
 
-namespace PListNet.Primitives
+namespace PListNet.Nodes
 {
 	/// <summary>
 	/// Represents a DateTime Value from a PList
 	/// </summary>
-	public class PListDate : PNode<DateTime>
+	public class DateNode : PNode<DateTime>
 	{
 		/// <summary>
 		/// Gets the Xml tag of this element.
@@ -27,17 +27,17 @@ namespace PListNet.Primitives
 		internal override int BinaryLength { get { return 3; } }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PListDate"/> class.
+		/// Initializes a new instance of the <see cref="DateNode"/> class.
 		/// </summary>
-		public PListDate()
+		public DateNode()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PListDate"/> class.
+		/// Initializes a new instance of the <see cref="DateNode"/> class.
 		/// </summary>
 		/// <param name="value">The value of this element.</param>
-		public PListDate(DateTime value)
+		public DateNode(DateTime value)
 		{
 			Value = value;
 		}

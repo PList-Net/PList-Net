@@ -2,12 +2,12 @@
 using System.IO;
 using PListNet.Exceptions;
 
-namespace PListNet.Primitives
+namespace PListNet.Nodes
 {
 	/// <summary>
-	/// Represents a Byte[] Value from a PList
+	/// Represents a byte[] Value from a PList
 	/// </summary>
-	public class PListData : PNode<byte[]>
+	public class DataNode : PNode<byte[]>
 	{
 		/// <summary>
 		/// Gets the Xml tag of this element.
@@ -27,17 +27,17 @@ namespace PListNet.Primitives
 		internal override int BinaryLength { get { return Value.Length; } }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PListData"/> class.
+		/// Initializes a new instance of the <see cref="DataNode"/> class.
 		/// </summary>
-		public PListData()
+		public DataNode()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PListData"/> class.
+		/// Initializes a new instance of the <see cref="DataNode"/> class.
 		/// </summary>
 		/// <param name="value">The value of this element.</param>
-		public PListData(byte[] value)
+		public DataNode(byte[] value)
 		{
 			Value = value;
 		}

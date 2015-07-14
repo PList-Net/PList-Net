@@ -4,12 +4,12 @@ using System.IO;
 using System.Net;
 using PListNet.Exceptions;
 
-namespace PListNet.Primitives
+namespace PListNet.Nodes
 {
 	/// <summary>
 	/// Represents an integer Value from a PList
 	/// </summary>
-	public class PListInteger : PNode<Int64>
+	public class IntegerNode : PNode<Int64>
 	{
 		/// <summary>
 		/// Gets the Xml tag of this element.
@@ -47,17 +47,17 @@ namespace PListNet.Primitives
 		public override Int64 Value { get; set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PListInteger"/> class.
+		/// Initializes a new instance of the <see cref="IntegerNode"/> class.
 		/// </summary>
-		public PListInteger()
+		public IntegerNode()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PListInteger"/> class.
+		/// Initializes a new instance of the <see cref="IntegerNode"/> class.
 		/// </summary>
 		/// <param name="value">The value of this element.</param>
-		public PListInteger(Int64 value)
+		public IntegerNode(Int64 value)
 		{
 			Value = value;
 		}
