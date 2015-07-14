@@ -50,6 +50,7 @@
   <ItemGroup>
     <EmbeddedResource Include="TestFiles\asdf-Info.plist" />
     <EmbeddedResource Include="TestFiles\asdf-Info.bin.plist" />
+    <EmbeddedResource Include="TestFiles\dict-inside-array.plist" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PListNet.csproj">
