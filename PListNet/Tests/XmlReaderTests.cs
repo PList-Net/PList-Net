@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
 using PListNet.Nodes;
-using System.Linq;
 
 namespace PListNet.Tests
 {
@@ -41,6 +41,33 @@ namespace PListNet.Tests
 				Assert.IsNotNull(dictionary);
 
 				Assert.AreEqual(4, dictionary.Count);
+			}
+		}
+
+		[Test]
+		public void When_Then()
+		{
+			using (var stream = TestFileHelper.GetTestFileStream("TestFiles/Pods-acknowledgements.plist"))
+			{
+				var root = PList.Load(stream) as DictionaryNode;
+
+				Assert.IsNotNull(root);
+				Assert.AreEqual(3, root.Count);
+
+				Assert.IsInstanceOf<StringNode>(root["StringsTable"]);
+				Assert.IsInstanceOf<StringNode>(root["Title"]);
+
+				var array = root["PreferenceSpecifiers"] as ArrayNode;
+				Assert.IsNotNull(array);
+				Assert.AreEqual(15, array.Count);
+
+				foreach (var node in array)
+				{
+					Assert.IsInstanceOf<DictionaryNode>(node);
+
+					var dictionary = (DictionaryNode) node;
+					Assert.AreEqual(3, dictionary.Count);
+				}
 			}
 		}
 	}
