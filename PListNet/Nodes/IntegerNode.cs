@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
-using System.Net;
+using PListNet.Internal;
 
 namespace PListNet.Nodes
 {
@@ -100,13 +100,13 @@ namespace PListNet.Nodes
 					Value = buf[0];
 					break;
 				case 1:
-					Value = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(buf, 0));
+					Value = EndianConverter.NetworkToHostOrder(BitConverter.ToInt16(buf, 0));
 					break;
 				case 2:
-					Value = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(buf, 0));
+					Value = EndianConverter.NetworkToHostOrder(BitConverter.ToInt32(buf, 0));
 					break;
 				case 3:
-					Value = IPAddress.NetworkToHostOrder(BitConverter.ToInt64(buf, 0));
+					Value = EndianConverter.NetworkToHostOrder(BitConverter.ToInt64(buf, 0));
 					break;
 				default:
 					throw new PListFormatException("Int > 64Bit");
@@ -125,13 +125,13 @@ namespace PListNet.Nodes
 					buf = new [] { (byte) Value };
 					break;
 				case 1:
-					buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short) Value));
+					buf = BitConverter.GetBytes(EndianConverter.HostToNetworkOrder((short) Value));
 					break;
 				case 2:
-					buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((Int32) Value));
+					buf = BitConverter.GetBytes(EndianConverter.HostToNetworkOrder((Int32) Value));
 					break;
 				case 3:
-					buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(Value));
+					buf = BitConverter.GetBytes(EndianConverter.HostToNetworkOrder(Value));
 					break;
 			}
 			stream.Write(buf, 0, buf.Length);

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using PListNet.Nodes;
 
 namespace PListNet.Internal
@@ -35,7 +34,7 @@ namespace PListNet.Internal
 
 			var readerState = new ReaderState(stream, nodeOffsets, indexSize);
 
-			var topNode = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(header, 20));
+			var topNode = EndianConverter.NetworkToHostOrder(BitConverter.ToInt32(header, 20));
 			return ReadInternal(readerState, topNode);
 		}
 
@@ -57,8 +56,8 @@ namespace PListNet.Internal
 		{
 			var offsetSize = header[6];
 
-			var nodeCount = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(header, 12));
-			var offsetTableOffset = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(header, 28));
+			var nodeCount = EndianConverter.NetworkToHostOrder(BitConverter.ToInt32(header, 12));
+			var offsetTableOffset = EndianConverter.NetworkToHostOrder(BitConverter.ToInt32(header, 28));
 			var offsetTableBuffer = new byte[nodeCount * offsetSize];
 
 			stream.Seek(offsetTableOffset, SeekOrigin.Begin);
@@ -155,7 +154,7 @@ namespace PListNet.Internal
 			{
 				var topNode = readerState.IndexSize == 1
 					? buf[i]
-					: IPAddress.NetworkToHostOrder(BitConverter.ToInt16(buf, 2 * i));
+					: EndianConverter.NetworkToHostOrder(BitConverter.ToInt16(buf, 2 * i));
 				node.Add(ReadInternal(readerState, topNode));
 			}
 		}
@@ -179,7 +178,7 @@ namespace PListNet.Internal
 			{
 				var topNode = readerState.IndexSize == 1
 					? bufKeys[i]
-					: IPAddress.NetworkToHostOrder(BitConverter.ToInt16(bufKeys, 2 * i));
+					: EndianConverter.NetworkToHostOrder(BitConverter.ToInt16(bufKeys, 2 * i));
 				var plKey = ReadInternal(readerState, topNode);
 
 				var stringKey = plKey as StringNode;
@@ -190,7 +189,7 @@ namespace PListNet.Internal
 
 				topNode = readerState.IndexSize == 1
 					? bufVals[i]
-					: IPAddress.NetworkToHostOrder(BitConverter.ToInt16(bufVals, 2 * i));
+					: EndianConverter.NetworkToHostOrder(BitConverter.ToInt16(bufVals, 2 * i));
 				var plVal = ReadInternal(readerState, topNode);
 
 				node.Add(stringKey.Value, plVal);

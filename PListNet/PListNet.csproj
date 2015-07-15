@@ -55,6 +55,7 @@
     <Compile Include="PListFormatException.cs" />
     <Compile Include="Internal\BinaryFormatReader.cs" />
     <Compile Include="Internal\BinaryFormatWriter.cs" />
+    <Compile Include="Internal\EndianConverter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
