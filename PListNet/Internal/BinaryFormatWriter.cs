@@ -42,7 +42,7 @@ namespace PListNet.Internal
 
 			byte nodeIndexSize;
 			if (nodeCount <= byte.MaxValue) nodeIndexSize = sizeof(byte);
-			else if (nodeCount <= Int16.MaxValue) nodeIndexSize = sizeof(Int16);
+			else if (nodeCount <= short.MaxValue) nodeIndexSize = sizeof(short);
 			else nodeIndexSize = sizeof(Int32);
 
 			int topOffestIdx = WriteInternal(stream, nodeIndexSize, offsets, node);
@@ -53,7 +53,7 @@ namespace PListNet.Internal
 
 			byte offsetSize;
 			if (offsetTableOffset <= Byte.MaxValue) offsetSize = sizeof(Byte);
-			else if (offsetTableOffset <= Int16.MaxValue) offsetSize = sizeof(Int16);
+			else if (offsetTableOffset <= short.MaxValue) offsetSize = sizeof(short);
 			else offsetSize = sizeof(Int32);
 
 			for (int i = 0; i < offsets.Count; i++)
@@ -65,7 +65,7 @@ namespace PListNet.Internal
 						buf = new [] { (byte) offsets[i] };
 						break;
 					case 2:
-						buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((Int16) offsets[i]));
+						buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short) offsets[i]));
 						break;
 					case 4:
 						buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(offsets[i]));
@@ -228,7 +228,7 @@ namespace PListNet.Internal
 				case 1:
 					return new [] { (Byte) index };
 				case 2:
-					return BitConverter.GetBytes(IPAddress.HostToNetworkOrder((Int16) index));
+					return BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short) index));
 				case 4:
 					return BitConverter.GetBytes(IPAddress.HostToNetworkOrder(index));
 				default:

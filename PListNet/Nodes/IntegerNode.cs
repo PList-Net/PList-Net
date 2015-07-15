@@ -8,7 +8,7 @@ namespace PListNet.Nodes
 	/// <summary>
 	/// Represents an integer Value from a PList
 	/// </summary>
-	public class IntegerNode : PNode<Int64>
+	public class IntegerNode : PNode<long>
 	{
 		/// <summary>
 		/// Gets the Xml tag of this element.
@@ -32,9 +32,9 @@ namespace PListNet.Nodes
 			get
 			{
 				if (Value >= Byte.MinValue && Value <= Byte.MaxValue) return 0;
-				if (Value >= Int16.MinValue && Value <= Int16.MaxValue) return 1;
+				if (Value >= short.MinValue && Value <= short.MaxValue) return 1;
 				if (Value >= Int32.MinValue && Value <= Int32.MaxValue) return 2;
-				if (Value >= Int64.MinValue && Value <= Int64.MaxValue) return 3;
+				if (Value >= long.MinValue && Value <= long.MaxValue) return 3;
 				return -1;
 			}
 		}
@@ -43,7 +43,7 @@ namespace PListNet.Nodes
 		/// Gets or sets the value of this element.
 		/// </summary>
 		/// <value>The value of this element.</value>
-		public override Int64 Value { get; set; }
+		public override long Value { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="IntegerNode"/> class.
@@ -56,7 +56,7 @@ namespace PListNet.Nodes
 		/// Initializes a new instance of the <see cref="IntegerNode"/> class.
 		/// </summary>
 		/// <param name="value">The value of this element.</param>
-		public IntegerNode(Int64 value)
+		public IntegerNode(long value)
 		{
 			Value = value;
 		}
@@ -67,7 +67,7 @@ namespace PListNet.Nodes
 		/// <param name="data">The string whis is parsed.</param>
 		internal override void Parse(string data)
 		{
-			Value = Int64.Parse(data, CultureInfo.InvariantCulture);
+			Value = long.Parse(data, CultureInfo.InvariantCulture);
 		}
 
 		/// <summary>
@@ -125,7 +125,7 @@ namespace PListNet.Nodes
 					buf = new [] { (byte) Value };
 					break;
 				case 1:
-					buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((Int16) Value));
+					buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short) Value));
 					break;
 				case 2:
 					buf = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((Int32) Value));
