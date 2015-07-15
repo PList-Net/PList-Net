@@ -69,7 +69,7 @@ namespace PListNet.Nodes
 			while (reader.NodeType != XmlNodeType.EndElement)
 			{
 				reader.ReadStartElement("key");
-				string key = reader.ReadString();
+				string key = reader.ReadContentAsString();
 				reader.ReadEndElement();
 
 				reader.MoveToContent();

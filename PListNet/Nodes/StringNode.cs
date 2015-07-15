@@ -129,7 +129,7 @@ namespace PListNet.Nodes
 
 			var encoding = BinaryTag == 5 ? Encoding.UTF8 : Encoding.BigEndianUnicode;
 
-			Value = encoding.GetString(buf);
+			Value = encoding.GetString(buf, 0, buf.Length);
 		}
 
 		/// <summary>

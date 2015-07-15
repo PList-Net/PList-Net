@@ -12,19 +12,6 @@ namespace PListNet
 	public static class PList
 	{
 		/// <summary>
-		/// Loads the PList from specified file.
-		/// </summary>
-		/// <param name="fileName">The path of the PList.</param>
-		/// <returns>A <see cref="PNode"/> object loaded from the file</returns>
-		public static PNode Load(string fileName)
-		{
-			using (var fs = new FileStream(fileName, FileMode.Open))
-			{
-				return Load(fs);
-			}
-		}
-
-		/// <summary>
 		/// Loads the PList from specified stream.
 		/// </summary>
 		/// <param name="stream">The stream containing the PList.</param>
@@ -50,7 +37,7 @@ namespace PListNet
 			stream.Seek(0, SeekOrigin.Begin);
 
 			// compare to known indicator
-			return Encoding.Default.GetString(buf) == "bplist00";
+			return Encoding.UTF8.GetString(buf, 0, buf.Length) == "bplist00";
 		}
 
 		private static PNode LoadAsBinary(Stream stream)
@@ -64,7 +51,6 @@ namespace PListNet
 			// set resolver to null in order to avoid calls to apple.com to resolve DTD
 			var settings = new XmlReaderSettings
 				{
-					XmlResolver = null,
 					DtdProcessing = DtdProcessing.Ignore,
 				};
 
@@ -80,20 +66,6 @@ namespace PListNet
 				reader.ReadEndElement();
 
 				return node;
-			}
-		}
-
-		/// <summary>
-		/// Saves the PList to the specified path.
-		/// </summary>
-		/// <param name="rootNode">Root node of the PList structure.</param>
-		/// <param name="fileName">The path of the PList.</param>
-		/// <param name="format">The format of the PList (Binary/Xml).</param>
-		public static void Save(PNode rootNode, string fileName, PListFormat format)
-		{
-			using (var fs = new FileStream(fileName, FileMode.Create))
-			{
-				Save(rootNode, fs, format);                
 			}
 		}
 

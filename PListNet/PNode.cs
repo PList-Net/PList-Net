@@ -58,7 +58,7 @@ namespace PListNet
 		internal override void ReadXml(XmlReader reader)
 		{
 			reader.ReadStartElement();
-			Parse(reader.ReadString());
+			Parse(reader.ReadContentAsString());
 			reader.ReadEndElement();
 		}
 
