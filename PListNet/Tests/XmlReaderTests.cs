@@ -45,7 +45,7 @@ namespace PListNet.Tests
 		}
 
 		[Test]
-		public void When_Then()
+		public void WhenDocumentContainsNestedCollectionsAndComplexText_ThenDocumentIsParsedCorrectly()
 		{
 			using (var stream = TestFileHelper.GetTestFileStream("TestFiles/Pods-acknowledgements.plist"))
 			{

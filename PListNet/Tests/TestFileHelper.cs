@@ -14,9 +14,10 @@ namespace PListNet.Tests
 			// get calling assembly
 			var assembly = Assembly.GetCallingAssembly();
 
-			// compute resource name suffix
+			// compute resource name suffix (replace Windows/Unix directory separators with namespace separator)
 			var relativeName = "." + relativeFilePath
-				.Replace(Path.DirectorySeparatorChar, namespaceSeparator)
+				.Replace('/', namespaceSeparator)
+				.Replace('\\', namespaceSeparator)
 				.Replace(' ', '_');
 
 			// get resource stream
