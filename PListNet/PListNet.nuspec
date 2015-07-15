@@ -12,9 +12,9 @@
     <description>.Net Library for working with Apple *.plist files.</description>
     <tags>Apple PList iPhone iOS iPad OSX Cocoa</tags>
     <releaseNotes>
-    	Version 2.0 is a major refactoring and cleanup. The API surface has been reduced and unit tests added.
-    	The original project appears to be abandoned on Google Code, this version continues from where work
-    	has been left off over on GitHub. 
+Version 2.0 is a major refactoring and cleanup. The API surface has been reduced and unit tests added.
+
+The original project appears to be abandoned on Google Code, this version continues from where work has been left off over on GitHub. 
     </releaseNotes>
   </metadata>
 </package>
