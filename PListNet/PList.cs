@@ -92,7 +92,11 @@ namespace PListNet
 					xmlWriter.WriteStartDocument();
 					xmlWriter.WriteDocType("plist", "-//Apple Computer//DTD PLIST 1.0//EN", "http://www.apple.com/DTDs/PropertyList-1.0.dtd", null);
 
+					// write out nodes, wrapped in plist root element
+					xmlWriter.WriteStartElement("plist");
+					xmlWriter.WriteAttributeString("version", "1.0");
 					rootNode.WriteXml(xmlWriter);
+					xmlWriter.WriteEndElement();
 					xmlWriter.Flush();
 				}
 			}
