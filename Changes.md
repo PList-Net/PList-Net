@@ -1,5 +1,8 @@
 ﻿# Change log
 
+## 2.0.2
+ - switched NuGet package to Release bits
+
 ## 2.0.1
  - corrected bug in XML writer that resulted in written file missing the root "plist" element
 
