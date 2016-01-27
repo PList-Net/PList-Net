@@ -1,5 +1,8 @@
 ﻿# Change log
 
+## 2.0.3
+ - fixed issue where invalid PList XML files were generated
+
 ## 2.0.2
  - switched NuGet package to Release bits
 

@@ -12,7 +12,7 @@
     <description>.Net Library for working with Apple *.plist files.</description>
     <tags>Apple PList iPhone iOS iPad OSX Cocoa</tags>
     <releaseNotes>
-    Version 2.0.2 switches the NuGet package to Release bits. No other changes are included.
+    Version 2.0.3 is a bug fix release that corrects writing of XML files.
     </releaseNotes>
   </metadata>
 </package>
