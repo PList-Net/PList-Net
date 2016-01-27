@@ -37,7 +37,7 @@ namespace PListNet.Nodes
 		/// Gets the Xml tag of this element.
 		/// </summary>
 		/// <value>The Xml tag of this element.</value>
-		internal override string XmlTag { get { return IsUtf16 ? "ustring" : "string"; } }
+		internal override string XmlTag { get { return "string"; } }
 
 		/// <summary>
 		/// Gets the binary typecode of this element.

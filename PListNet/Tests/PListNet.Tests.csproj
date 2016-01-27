@@ -39,6 +39,7 @@
     <Compile Include="TestFileHelper.cs" />
     <Compile Include="BinaryReaderTests.cs" />
     <Compile Include="BinaryWriterTests.cs" />
+    <Compile Include="XmlWriterTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -50,6 +51,7 @@
     <EmbeddedResource Include="TestFiles\asdf-Info.bin.plist" />
     <EmbeddedResource Include="TestFiles\dict-inside-array.plist" />
     <EmbeddedResource Include="TestFiles\Pods-acknowledgements.plist" />
+    <EmbeddedResource Include="TestFiles\utf8-Info.plist" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PListNet.csproj">
