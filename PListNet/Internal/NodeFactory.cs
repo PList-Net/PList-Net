@@ -24,6 +24,7 @@ namespace PListNet.Internal
 			Register(new ArrayNode());
 			Register(new DataNode());
 			Register(new DateNode());
+      Register(new UIDNode());
 
 			Register("string", 5, new StringNode());
 			Register("ustring", 6, new StringNode());

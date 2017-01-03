@@ -1,3 +1,7 @@
+
+Changelog:
++ Added PList UID Type 0x8 
+
 # PList-Net
 
 ## Summary
