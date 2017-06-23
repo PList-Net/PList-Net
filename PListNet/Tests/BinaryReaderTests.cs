@@ -21,5 +21,23 @@ namespace PListNet.Tests
 				Assert.AreEqual(14, dictionary.Count);
 			}
 		}
-	}
+
+        [Test]
+        public void ReadingFile_With_UID_Field_Fail()
+        {
+            using (var stream = TestFileHelper.GetTestFileStream("TestFiles/uid-test.plist"))
+            {
+                try
+                {
+                    var node = PList.Load(stream);
+                    Assert.Pass();
+                }
+                catch (PListFormatException)
+                {
+                    Assert.Fail();
+                }
+
+            }
+        }
+    }
 }
