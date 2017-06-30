@@ -12,28 +12,28 @@ namespace PListNet.Nodes
 		/// Gets the Xml tag of this element.
 		/// </summary>
 		/// <value>The Xml tag of this element.</value>
-		internal override string XmlTag { get { return "fill"; } }
+		internal override string XmlTag => "fill";
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the binary typecode of this element.
 		/// </summary>
 		/// <value>The binary typecode of this element.</value>
-		internal override byte BinaryTag { get { return 0; } }
+		internal override byte BinaryTag => 0;
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the length of this PList node.
 		/// </summary>
-		internal override int BinaryLength { get { return 0x0F; } }
+		internal override int BinaryLength => 0x0F;
 
-		/// <summary>
+	    /// <summary>
 		/// Gets a value indicating whether this instance is written only once in binary mode.
 		/// </summary>
 		/// <value>
 		/// 	<c>true</c> this instance is written only once in binary mode; otherwise, <c>false</c>.
 		/// </value>
-		internal override bool IsBinaryUnique { get { return false; } }
+		internal override bool IsBinaryUnique => false;
 
-		/// <summary>
+	    /// <summary>
 		/// Reads this element binary from the reader.
 		/// </summary>
 		internal override void ReadBinary(Stream stream, int nodeLength)

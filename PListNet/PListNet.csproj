@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Nodes\UidNode.cs" />
     <Compile Include="PListFormat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PList.cs" />

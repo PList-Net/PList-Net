@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -10,7 +9,7 @@ namespace PListNet.Nodes
 	/// </summary>
 	public class StringNode : PNode<string>
 	{
-		private static byte[] s_UTF8Bytes = { 
+		private static readonly byte[] _utf8Bytes = { 
 			0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
 			0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
 			0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F,
@@ -29,7 +28,7 @@ namespace PListNet.Nodes
 			0xF0, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF
 		};
 
-		private static HashSet<char> s_UTF8Chars = new HashSet<char>(Encoding.UTF8.GetChars(s_UTF8Bytes));
+		private static readonly HashSet<char> _utf8Chars = new HashSet<char>(Encoding.UTF8.GetChars(_utf8Bytes));
 
 		private string _value;
 
@@ -37,21 +36,21 @@ namespace PListNet.Nodes
 		/// Gets the Xml tag of this element.
 		/// </summary>
 		/// <value>The Xml tag of this element.</value>
-		internal override string XmlTag { get { return "string"; } }
+		internal override string XmlTag => "string";
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the binary typecode of this element.
 		/// </summary>
 		/// <value>The binary typecode of this element.</value>
-		internal override byte BinaryTag { get { return (byte) (IsUtf16 ? 6 : 5); } }
+		internal override byte BinaryTag => (byte) (IsUtf16 ? 6 : 5);
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the length of this PList element.
 		/// </summary>
 		/// <returns>The length of this PList element.</returns>
-		internal override int BinaryLength { get { return Value.Length; } }
+		internal override int BinaryLength => Value.Length;
 
-		/// <summary>
+	    /// <summary>
 		/// Gets or sets a value indicating whether this instance is UTF16.
 		/// </summary>
 		/// <value><c>true</c> if this instance is UTF16; otherwise, <c>false</c>.</value>
@@ -77,16 +76,16 @@ namespace PListNet.Nodes
 		/// Gets or sets the value of this element.
 		/// </summary>
 		/// <value>The value of this element.</value>
-		public override string Value
+		public sealed override string Value
 		{
-			get { return _value; }
-			set
+			get => _value;
+		    set
 			{
 				_value = value;
 				//Detect Encoding
 				foreach (char c in value)
 				{
-					if (!s_UTF8Chars.Contains(c))
+					if (!_utf8Chars.Contains(c))
 					{
 						IsUtf16 = true;
 						return;

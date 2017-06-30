@@ -49,9 +49,9 @@ namespace PListNet
 		/// <value>The value.</value>
 		public virtual T Value { get; set; }
 
-		internal override bool IsBinaryUnique { get { return true; } }
+		internal override bool IsBinaryUnique => true;
 
-		/// <summary>
+	    /// <summary>
 		/// Generates an object from its XML representation.
 		/// </summary>
 		/// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
@@ -116,7 +116,7 @@ namespace PListNet
 		/// <returns>A <see cref="System.String"/> that represents the current <see cref="T:PListNet.PNode`1"/>.</returns>
 		public override string ToString()
 		{
-			return string.Format("{0}: {1}", XmlTag, Value);
+			return $"{XmlTag}: {Value}";
 		}
 	}
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Xml;
 using PListNet.Internal;
@@ -28,7 +27,7 @@ namespace PListNet
 
 		private static bool IsFormatBinary(Stream stream)
 		{
-			var buf = new Byte[8];
+			var buf = new byte[8];
 
 			// read in first 8 bytes
 			stream.Read(buf, 0, buf.Length);

@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Xml;
 
 namespace PListNet.Nodes
@@ -7,31 +6,31 @@ namespace PListNet.Nodes
 	/// <summary>
 	/// Represents a Boolean Value from a PList
 	/// </summary>
-	public class BooleanNode : PNode<bool>
+	public sealed class BooleanNode : PNode<bool>
 	{
 		/// <summary>
 		/// Gets the Xml tag of this element.
 		/// </summary>
 		/// <value>The Xml tag of this element.</value>
-		internal override string XmlTag { get { return "boolean"; } }
+		internal override string XmlTag => "boolean";
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the binary typecode of this element.
 		/// </summary>
 		/// <value>The binary typecode of this element.</value>
-		internal override byte BinaryTag { get { return 0; } }
+		internal override byte BinaryTag => 0;
 
-		internal override int BinaryLength { get { return Value ? 9 : 8; } }
+	    internal override int BinaryLength => Value ? 9 : 8;
 
-		/// <summary>
+	    /// <summary>
 		/// Gets a value indicating whether this instance is written only once in binary mode.
 		/// </summary>
 		/// <value>
 		/// 	<c>true</c> this instance is written only once in binary mode; otherwise, <c>false</c>.
 		/// </value>
-		internal override bool IsBinaryUnique { get { return true; } }
+		internal override bool IsBinaryUnique => true;
 
-		/// <summary>
+	    /// <summary>
 		/// Initializes a new instance of the <see cref="BooleanNode"/> class.
 		/// </summary>
 		public BooleanNode()
@@ -42,7 +41,7 @@ namespace PListNet.Nodes
 		/// Initializes a new instance of the <see cref="BooleanNode"/> class.
 		/// </summary>
 		/// <param name="value">The Value of this element</param>
-		public BooleanNode(Boolean value)
+		public BooleanNode(bool value)
 		{
 			Value = value;
 		}

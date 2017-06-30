@@ -24,6 +24,7 @@ namespace PListNet.Internal
 			Register(new ArrayNode());
 			Register(new DataNode());
 			Register(new DateNode());
+			Register(new UidNode());
 
 			Register("string", 5, new StringNode());
 			Register("ustring", 6, new StringNode());
@@ -76,7 +77,7 @@ namespace PListNet.Internal
 				return (PNode) Activator.CreateInstance(_binaryTags[binaryTag]);
 			}
 
-			throw new PListFormatException(string.Format("Unknown node - binary tag {0}", binaryTag));
+			throw new PListFormatException($"Unknown node - binary tag {binaryTag}");
 		}
 
 		/// <summary>        
@@ -91,7 +92,7 @@ namespace PListNet.Internal
 				return (PNode) Activator.CreateInstance(_xmlTags[tag]);
 			}
 
-			throw new PListFormatException(string.Format("Unknown node - XML tag \"{0}\"", tag));
+			throw new PListFormatException($"Unknown node - XML tag \"{tag}\"");
 		}
 
 		/// <summary>

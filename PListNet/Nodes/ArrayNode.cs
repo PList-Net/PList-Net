@@ -17,25 +17,25 @@ namespace PListNet.Nodes
 		/// Gets the Xml tag of this element.
 		/// </summary>
 		/// <value>The Xml tag of this element.</value>
-		internal override string XmlTag { get { return "array"; } }
+		internal override string XmlTag => "array";
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the binary typecode of this element.
 		/// </summary>
 		/// <value>The binary typecode of this element.</value>
-		internal override byte BinaryTag { get { return 0x0A; } }
+		internal override byte BinaryTag => 0x0A;
 
-		internal override int BinaryLength { get { return _list.Count; } }
+	    internal override int BinaryLength => _list.Count;
 
-		/// <summary>
+	    /// <summary>
 		/// Gets a value indicating whether this instance is written only once in binary mode.
 		/// </summary>
 		/// <value>
 		/// 	<c>true</c> this instance is written only once in binary mode; otherwise, <c>false</c>.
 		/// </value>
-		internal override bool IsBinaryUnique { get { return false; } }
+		internal override bool IsBinaryUnique => false;
 
-		/// <summary>
+	    /// <summary>
 		/// Reads this element binary from the reader.
 		/// </summary>
 		internal override void ReadBinary(Stream stream, int nodeLength)
@@ -125,8 +125,8 @@ namespace PListNet.Nodes
 		/// <param name="index">Index.</param>
 		public PNode this[int index]
 		{
-			get { return _list[index]; }
-			set { _list[index] = value; }
+			get => _list[index];
+		    set => _list[index] = value;
 		}
 		#endregion
 
@@ -180,20 +180,15 @@ namespace PListNet.Nodes
 		/// Gets the count.
 		/// </summary>
 		/// <value>The count.</value>
-		public int Count
-		{
-			get { return _list.Count; }
-		}
+		public int Count => _list.Count;
 
-		/// <summary>
+	    /// <summary>
 		/// Gets a value indicating whether this instance is read only.
 		/// </summary>
 		/// <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
-		public bool IsReadOnly
-		{
-			get { return false; }
-		}
-		#endregion
+		public bool IsReadOnly => false;
+
+	    #endregion
 
 		#region IEnumerable implementation
 		/// <summary>

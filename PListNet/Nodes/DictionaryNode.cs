@@ -17,29 +17,29 @@ namespace PListNet.Nodes
 		/// Gets the Xml tag of this element.
 		/// </summary>
 		/// <value>The Xml tag of this element.</value>
-		internal override string XmlTag { get { return "dict"; } }
+		internal override string XmlTag => "dict";
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the binary typecode of this element.
 		/// </summary>
 		/// <value>The binary typecode of this element.</value>
-		internal override byte BinaryTag { get { return 0x0D; } }
+		internal override byte BinaryTag => 0x0D;
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the length of this PList node.
 		/// </summary>
 		/// <returns>The length of this PList node.</returns>
-		internal override int BinaryLength { get { return Count; } }
+		internal override int BinaryLength => Count;
 
-		/// <summary>
+	    /// <summary>
 		/// Gets a value indicating whether this instance is written only once in binary mode.
 		/// </summary>
 		/// <value>
 		/// 	<c>true</c> this instance is written only once in binary mode; otherwise, <c>false</c>.
 		/// </value>
-		internal override bool IsBinaryUnique { get { return false; } }
+		internal override bool IsBinaryUnique => false;
 
-		/// <summary>
+	    /// <summary>
 		/// Reads this element binary from the reader.
 		/// </summary>
 		internal override void ReadBinary(Stream stream, int nodeLength)
@@ -151,29 +151,23 @@ namespace PListNet.Nodes
 		/// <param name="index">Index.</param>
 		public PNode this[string index]
 		{
-			get { return _dictionary[index]; }
-			set { _dictionary[index] = value; }
+			get => _dictionary[index];
+		    set => _dictionary[index] = value;
 		}
 
 		/// <summary>
 		/// Gets the keys.
 		/// </summary>
 		/// <value>The keys.</value>
-		public ICollection<string> Keys
-		{
-			get { return _dictionary.Keys; }
-		}
+		public ICollection<string> Keys => _dictionary.Keys;
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the values.
 		/// </summary>
 		/// <value>The values.</value>
-		public ICollection<PNode> Values
-		{
-			get { return _dictionary.Values; }
-		}
+		public ICollection<PNode> Values => _dictionary.Values;
 
-		#endregion
+	    #endregion
 
 		#region ICollection implementation
 
@@ -226,21 +220,15 @@ namespace PListNet.Nodes
 		/// Gets the count.
 		/// </summary>
 		/// <value>The count.</value>
-		public int Count
-		{
-			get { return _dictionary.Count; }
-		}
+		public int Count => _dictionary.Count;
 
-		/// <summary>
+	    /// <summary>
 		/// Gets a value indicating whether this instance is read only.
 		/// </summary>
 		/// <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
-		public bool IsReadOnly
-		{
-			get { return false; }
-		}
+		public bool IsReadOnly => false;
 
-		#endregion
+	    #endregion
 
 		#region IEnumerable implementation
 

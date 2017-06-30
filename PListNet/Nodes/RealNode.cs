@@ -8,23 +8,23 @@ namespace PListNet.Nodes
 	/// <summary>
 	/// Represents a double Value from a PList
 	/// </summary>
-	public class RealNode : PNode<double>
+	public sealed class RealNode : PNode<double>
 	{
 		/// <summary>
 		/// Gets the Xml tag of this element.
 		/// </summary>
 		/// <value>The Xml tag of this element.</value>
-		internal override string XmlTag { get { return "real"; } }
+		internal override string XmlTag => "real";
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the binary typecode of this element.
 		/// </summary>
 		/// <value>The binary typecode of this element.</value>
-		internal override byte BinaryTag { get { return 2; } }
+		internal override byte BinaryTag => 2;
 
-		internal override int BinaryLength { get { return 3; } }
+	    internal override int BinaryLength => 3;
 
-		/// <summary>
+	    /// <summary>
 		/// Initializes a new instance of the <see cref="RealNode"/> class.
 		/// </summary>
 		public RealNode()

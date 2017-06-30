@@ -106,7 +106,7 @@ namespace PListNet.Internal
 			}
 
 			var objectLength = buf[0] & 0x0F;
-			var tag = (Byte) ((buf[0] >> 4) & 0x0F);
+			var tag = (byte) ((buf[0] >> 4) & 0x0F);
 
 			if (tag != 0 && objectLength == 0x0F)
 			{

@@ -42,7 +42,7 @@ namespace PListNet.Internal
 			byte nodeIndexSize;
 			if (nodeCount <= byte.MaxValue) nodeIndexSize = sizeof(byte);
 			else if (nodeCount <= short.MaxValue) nodeIndexSize = sizeof(short);
-			else nodeIndexSize = sizeof(Int32);
+			else nodeIndexSize = sizeof(int);
 
 			int topOffestIdx = WriteInternal(stream, nodeIndexSize, offsets, node);
 			nodeCount = offsets.Count;
@@ -51,9 +51,9 @@ namespace PListNet.Internal
 
 
 			byte offsetSize;
-			if (offsetTableOffset <= Byte.MaxValue) offsetSize = sizeof(Byte);
+			if (offsetTableOffset <= byte.MaxValue) offsetSize = sizeof(byte);
 			else if (offsetTableOffset <= short.MaxValue) offsetSize = sizeof(short);
-			else offsetSize = sizeof(Int32);
+			else offsetSize = sizeof(int);
 
 			for (int i = 0; i < offsets.Count; i++)
 			{
@@ -156,13 +156,13 @@ namespace PListNet.Internal
 
 		private void WriteInternal(Stream stream, byte nodeIndexSize, List<int> offsets, DictionaryNode dictionary)
 		{
-			var keys = new Byte[nodeIndexSize * dictionary.Count];
-			var values = new Byte[nodeIndexSize * dictionary.Count];
+			var keys = new byte[nodeIndexSize * dictionary.Count];
+			var values = new byte[nodeIndexSize * dictionary.Count];
 			long streamPos = stream.Position;
 			stream.Write(keys, 0, keys.Length);
 			stream.Write(values, 0, values.Length);
 
-			KeyValuePair<String, PNode>[] elems = dictionary.ToArray();
+			KeyValuePair<string, PNode>[] elems = dictionary.ToArray();
 
 			for (int i = 0; i < dictionary.Count; i++)
 			{
@@ -225,7 +225,7 @@ namespace PListNet.Internal
 			switch (nodeIndexSize)
 			{
 				case 1:
-					return new [] { (Byte) index };
+					return new [] { (byte) index };
 				case 2:
 					return BitConverter.GetBytes(EndianConverter.HostToNetworkOrder((short) index));
 				case 4:

@@ -14,15 +14,15 @@ namespace PListNet.Nodes
 		/// Gets the Xml tag of this element.
 		/// </summary>
 		/// <value>The Xml tag of this element.</value>
-		internal override string XmlTag { get { return "integer"; } }
+		internal override string XmlTag => "integer";
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the binary typecode of this element.
 		/// </summary>
 		/// <value>The binary typecode of this element.</value>
-		internal override byte BinaryTag { get { return 1; } }
+		internal override byte BinaryTag => 1;
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the length of this PList element.
 		/// </summary>
 		/// <returns>The length of this PList element.</returns>
@@ -31,9 +31,9 @@ namespace PListNet.Nodes
 		{
 			get
 			{
-				if (Value >= Byte.MinValue && Value <= Byte.MaxValue) return 0;
+				if (Value >= byte.MinValue && Value <= byte.MaxValue) return 0;
 				if (Value >= short.MinValue && Value <= short.MaxValue) return 1;
-				if (Value >= Int32.MinValue && Value <= Int32.MaxValue) return 2;
+				if (Value >= int.MinValue && Value <= int.MaxValue) return 2;
 				if (Value >= long.MinValue && Value <= long.MaxValue) return 3;
 				return -1;
 			}
@@ -118,23 +118,27 @@ namespace PListNet.Nodes
 		/// </summary>
 		internal override void WriteBinary(Stream stream)
 		{
-			byte[] buf = null;
-			switch (BinaryLength)
-			{
-				case 0:
-					buf = new [] { (byte) Value };
-					break;
-				case 1:
-					buf = BitConverter.GetBytes(EndianConverter.HostToNetworkOrder((short) Value));
-					break;
-				case 2:
-					buf = BitConverter.GetBytes(EndianConverter.HostToNetworkOrder((Int32) Value));
-					break;
-				case 3:
-					buf = BitConverter.GetBytes(EndianConverter.HostToNetworkOrder(Value));
-					break;
-			}
-			stream.Write(buf, 0, buf.Length);
-		}
-	}
+			byte[] buf;
+            switch (BinaryLength)
+            {
+                case 0:
+                    buf = new[] { (byte)Value };
+                    break;
+                case 1:
+                    buf = BitConverter.GetBytes(EndianConverter.HostToNetworkOrder((short)Value));
+                    break;
+                case 2:
+                    buf = BitConverter.GetBytes(EndianConverter.HostToNetworkOrder((int)Value));
+                    break;
+                case 3:
+                    buf = BitConverter.GetBytes(EndianConverter.HostToNetworkOrder(Value));
+                    break;
+                
+                default:
+                    throw new Exception($"Unexpected length: {BinaryLength}.");
+            }
+		    
+            stream.Write(buf, 0, buf.Length);
+        }
+    }
 }

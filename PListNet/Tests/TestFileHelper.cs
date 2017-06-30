@@ -26,13 +26,13 @@ namespace PListNet.Tests
 				.FirstOrDefault(name => name.EndsWith(relativeName, StringComparison.InvariantCulture));
 			if (fullName == null)
 			{
-				throw new Exception(string.Format("Unable to find resource for path \"{0}\". Resource with name ending on \"{1}\" was not found in assembly.", relativeFilePath, relativeName));
+				throw new Exception($"Unable to find resource for path \"{relativeFilePath}\". Resource with name ending on \"{relativeName}\" was not found in assembly.");
 			}
 
 			var stream = assembly.GetManifestResourceStream(fullName);
 			if (stream == null)
 			{
-				throw new Exception(string.Format("Unable to find resource for path \"{0}\". Resource named \"{1}\" was not found in assembly.", relativeFilePath, fullName));
+				throw new Exception($"Unable to find resource for path \"{relativeFilePath}\". Resource named \"{fullName}\" was not found in assembly.");
 			}
 
 			return stream;

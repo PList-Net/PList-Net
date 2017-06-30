@@ -32,11 +32,10 @@ namespace PListNet.Tests
                     var node = PList.Load(stream);
                     Assert.Pass();
                 }
-                catch (PListFormatException)
+                catch (PListFormatException ex)
                 {
-                    Assert.Fail();
+                    Assert.Fail(ex.Message);
                 }
-
             }
         }
     }

@@ -9,23 +9,23 @@ namespace PListNet.Nodes
 	/// <summary>
 	/// Represents a DateTime Value from a PList
 	/// </summary>
-	public class DateNode : PNode<DateTime>
+	public sealed class DateNode : PNode<DateTime>
 	{
 		/// <summary>
 		/// Gets the Xml tag of this element.
 		/// </summary>
 		/// <value>The Xml tag of this element.</value>
-		internal override string XmlTag { get { return "date"; } }
+		internal override string XmlTag => "date";
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the binary typecode of this element.
 		/// </summary>
 		/// <value>The binary typecode of this element.</value>
-		internal override byte BinaryTag { get { return 3; } }
+		internal override byte BinaryTag => 3;
 
-		internal override int BinaryLength { get { return 3; } }
+	    internal override int BinaryLength => 3;
 
-		/// <summary>
+	    /// <summary>
 		/// Initializes a new instance of the <see cref="DateNode"/> class.
 		/// </summary>
 		public DateNode()
@@ -66,7 +66,7 @@ namespace PListNet.Nodes
 		/// </summary>
 		internal override void ReadBinary(Stream stream, int nodeLength)
 		{
-			Debug.WriteLine("Unverified", "WARNING");
+			Debug.WriteLine("Unverified");
 
 			var buf = new byte[1 << nodeLength];
 			if (stream.Read(buf, 0, buf.Length) != buf.Length)
@@ -97,7 +97,7 @@ namespace PListNet.Nodes
 		/// </summary>
 		internal override void WriteBinary(Stream stream)
 		{
-			Debug.WriteLine("Unverified", "WARNING");
+			Debug.WriteLine("Unverified");
 
 			var start = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 

@@ -6,26 +6,26 @@ namespace PListNet.Nodes
 	/// <summary>
 	/// Represents a byte[] Value from a PList
 	/// </summary>
-	public class DataNode : PNode<byte[]>
+	public sealed class DataNode : PNode<byte[]>
 	{
 		/// <summary>
 		/// Gets the Xml tag of this element.
 		/// </summary>
 		/// <value>The Xml tag of this element.</value>
-		internal override string XmlTag { get { return "data"; } }
+		internal override string XmlTag => "data";
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the binary typecode of this element.
 		/// </summary>
 		/// <value>The binary typecode of this element.</value>
-		internal override byte BinaryTag { get { return 4; } }
+		internal override byte BinaryTag => 4;
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the length of this PList element.
 		/// </summary>
-		internal override int BinaryLength { get { return Value.Length; } }
+		internal override int BinaryLength => Value.Length;
 
-		/// <summary>
+	    /// <summary>
 		/// Initializes a new instance of the <see cref="DataNode"/> class.
 		/// </summary>
 		public DataNode()
