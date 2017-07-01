@@ -38,5 +38,22 @@ namespace PListNet.Tests
                 }
             }
         }
+
+	    [Test]
+	    public void ReadingFile_With_16bit_Integers_Fail()
+	    {
+	        using (var stream = TestFileHelper.GetTestFileStream("TestFiles/unity.binary.plist"))
+	        {
+	            try
+	            {
+	                var node = PList.Load(stream);
+	                Assert.Pass();
+	            }
+	            catch (PListFormatException ex)
+	            {
+	                Assert.Fail(ex.Message);
+	            }
+	        }
+	    }
     }
 }

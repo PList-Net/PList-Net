@@ -44,12 +44,14 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
-    <EmbeddedResource Include="TestFiles\uid-test.plist" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="TestFiles\asdf-Info.plist" />
     <EmbeddedResource Include="TestFiles\asdf-Info.bin.plist" />
+    <EmbeddedResource Include="TestFiles\uid-test.plist" />
+    <EmbeddedResource Include="TestFiles\unity.binary.plist" />
+    <EmbeddedResource Include="TestFiles\unity.xml.plist" />
     <EmbeddedResource Include="TestFiles\dict-inside-array.plist" />
     <EmbeddedResource Include="TestFiles\Pods-acknowledgements.plist" />
     <EmbeddedResource Include="TestFiles\utf8-Info.plist" />

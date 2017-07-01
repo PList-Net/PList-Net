@@ -10,14 +10,7 @@ namespace PListNet.Internal
 	/// </summary>
 	internal class BinaryFormatReader
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="BinaryFormatReader"/> class.
-		/// </summary>
-		internal BinaryFormatReader()
-		{
-		}
-
-		/// <summary>
+	    /// <summary>
 		/// Reads a binary formated <see cref="T:PListNet.PNode"/> from the specified stream.
 		/// </summary>
 		/// <param name="stream">The stream.</param>
@@ -67,10 +60,10 @@ namespace PListNet.Internal
 			}
 
 			var nodeOffsets = new int[nodeCount];
-			for (int i = 0; i < nodeCount; i++)
+			for (var i = 0; i < nodeCount; i++)
 			{
 				var cur = new byte[sizeof(uint)];
-				for (int j = 0; j < offsetSize; j++)
+				for (var j = 0; j < offsetSize; j++)
 				{
 					cur[offsetSize - 1 - j] = offsetTableBuffer[i * offsetSize + j];
 				}
@@ -117,6 +110,13 @@ namespace PListNet.Internal
 				}
 
 				objectLength = (int) ((IntegerNode) lengthNode).Value;
+			    if (objectLength <= 0)
+			    {
+			        throw new PListFormatException($"Object length may not be less than 1 (parsed value was {objectLength}). " +
+			                                       "This error could be caused by a malformed PList file or an issue with this parser library. " +
+			                                       "Try converting the file from binary to XML and parsing that. If XML parsing succeeds, " +
+			                                       "please file a bug in our GitHub repo and include a pull request with a failing test.");
+			    }
 			}
 
 			var node = NodeFactory.Create(tag, objectLength);
