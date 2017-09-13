@@ -55,5 +55,22 @@ namespace PListNet.Tests
 	            }
 	        }
 	    }
+
+	    [Test]
+	    public void ReadingFile_GitHub_Issue9_Fail()
+	    {
+	        using (var stream = TestFileHelper.GetTestFileStream("TestFiles/github-9.plist"))
+	        {
+	            try
+	            {
+	                var node = PList.Load(stream);
+	                Assert.Pass();
+	            }
+	            catch (PListFormatException ex)
+	            {
+	                Assert.Fail(ex.Message);
+	            }
+	        }
+	    }
     }
 }
