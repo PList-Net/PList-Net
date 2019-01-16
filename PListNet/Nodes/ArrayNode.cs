@@ -59,6 +59,8 @@ namespace PListNet.Nodes
 
 			if (wasEmpty) return;
 
+			reader.MoveToContent();
+
 			while (reader.NodeType != XmlNodeType.EndElement)
 			{
 				// make sure we are position at an element, skipping white space and such
