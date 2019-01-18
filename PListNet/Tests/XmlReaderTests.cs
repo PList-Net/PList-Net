@@ -79,22 +79,14 @@ namespace PListNet.Tests
                 var root = PList.Load(stream) as DictionaryNode;
 
                 Assert.IsNotNull(root);
-                Assert.AreEqual(3, root.Count);
+                Assert.AreEqual(1, root.Count);
 
-                Assert.IsInstanceOf<StringNode>(root["StringsTable"]);
-                Assert.IsInstanceOf<StringNode>(root["Title"]);
+                Assert.IsInstanceOf<DictionaryNode>(root["Entitlements"]);
+				var dict = root["Entitlements"] as DictionaryNode;
 
-                var array = root["PreferenceSpecifiers"] as ArrayNode;
+				var array = dict["com.apple.developer.icloud-container-identifiers"] as ArrayNode;
                 Assert.IsNotNull(array);
-                Assert.AreEqual(15, array.Count);
-
-                foreach (var node in array)
-                {
-                    Assert.IsInstanceOf<DictionaryNode>(node);
-
-                    var dictionary = (DictionaryNode)node;
-                    Assert.AreEqual(3, dictionary.Count);
-                }
+                Assert.AreEqual(0, array.Count);
             }
         }
     }
