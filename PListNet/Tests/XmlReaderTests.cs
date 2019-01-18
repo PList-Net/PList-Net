@@ -70,5 +70,32 @@ namespace PListNet.Tests
 				}
 			}
 		}
-	}
+
+        [Test]
+        public void WhenDocumentContainsEmptyArray_ThenDocumentIsParsedCorrectly()
+        {
+            using (var stream = TestFileHelper.GetTestFileStream("TestFiles/empty-array.plist"))
+            {
+                var root = PList.Load(stream) as DictionaryNode;
+
+                Assert.IsNotNull(root);
+                Assert.AreEqual(3, root.Count);
+
+                Assert.IsInstanceOf<StringNode>(root["StringsTable"]);
+                Assert.IsInstanceOf<StringNode>(root["Title"]);
+
+                var array = root["PreferenceSpecifiers"] as ArrayNode;
+                Assert.IsNotNull(array);
+                Assert.AreEqual(15, array.Count);
+
+                foreach (var node in array)
+                {
+                    Assert.IsInstanceOf<DictionaryNode>(node);
+
+                    var dictionary = (DictionaryNode)node;
+                    Assert.AreEqual(3, dictionary.Count);
+                }
+            }
+        }
+    }
 }
