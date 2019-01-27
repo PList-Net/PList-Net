@@ -59,11 +59,11 @@ namespace PListNet.Nodes
 
 			if (wasEmpty) return;
 
+			// make sure we are position at an element, skipping white space and such
+			_ = reader.MoveToContent();
+
 			while (reader.NodeType != XmlNodeType.EndElement)
 			{
-				// make sure we are position at an element, skipping white space and such
-				reader.MoveToContent();
-
 				var plelem = NodeFactory.Create(reader.LocalName);
 				plelem.ReadXml(reader);
 
