@@ -1,5 +1,11 @@
 ﻿# Change log
 
+## 2.0.5
+ - project cleanup (removed unused file)
+
+## 2.0.4
+ - fixed handling of empty arrays
+
 ## 2.0.3
  - fixed issue where invalid PList XML files were generated
 

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>PListNet</id>
-    <version>2.0.3</version>
+    <version>2.0.5</version>
     <title>PListNet</title>
     <authors>Michael Teper, Christian Ecker</authors>
     <owners>Vijay Santhanam, Christian Ecker, Michael Teper</owners>
@@ -12,7 +12,7 @@
     <description>.Net Library for working with Apple *.plist files.</description>
     <tags>Apple PList iPhone iOS iPad OSX Cocoa</tags>
     <releaseNotes>
-    Version 2.0.3 is a bug fix release that corrects writing of XML files.
+    Version 2.0.5 is a bug fix release that corrects reading files with empty arrays.
     </releaseNotes>
   </metadata>
 </package>
