@@ -1,7 +1,6 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
-using System.Linq;
+using BitConverter;
 
 namespace PListNet.Nodes
 {
@@ -78,10 +77,10 @@ namespace PListNet.Nodes
 				case 1:
 					throw new PListFormatException("Real < 32Bit");
 				case 2:
-					Value = BitConverter.ToSingle(buf.Reverse().ToArray(), 0);
+					Value = EndianBitConverter.BigEndian.ToSingle(buf, 0);
 					break;
 				case 3:
-					Value = BitConverter.ToDouble(buf.Reverse().ToArray(), 0);
+					Value = EndianBitConverter.BigEndian.ToDouble(buf, 0);
 					break;
 				default:
 					throw new PListFormatException("Real > 64Bit");
@@ -93,7 +92,7 @@ namespace PListNet.Nodes
 		/// </summary>
 		internal override void WriteBinary(Stream stream)
 		{
-			var buf = BitConverter.GetBytes(Value).Reverse().ToArray();
+			var buf = EndianBitConverter.BigEndian.GetBytes(Value);
 			stream.Write(buf, 0, buf.Length);
 		}
 	}

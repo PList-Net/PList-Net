@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
+using BitConverter;
 
 namespace PListNet.Nodes
 {
@@ -80,10 +80,10 @@ namespace PListNet.Nodes
 				case 1:
 					throw new PListFormatException("Date < 32Bit");
 				case 2:
-					ticks = BitConverter.ToSingle(buf.Reverse().ToArray(), 0);
+					ticks = EndianBitConverter.BigEndian.ToSingle(buf, 0);
 					break;
 				case 3:
-					ticks = BitConverter.ToDouble(buf.Reverse().ToArray(), 0);
+					ticks = EndianBitConverter.BigEndian.ToDouble(buf, 0);
 					break;
 				default:
 					throw new PListFormatException("Date > 64Bit");
@@ -102,7 +102,7 @@ namespace PListNet.Nodes
 			var start = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
 			TimeSpan ts = Value - start;
-			var buf = BitConverter.GetBytes(ts.TotalSeconds).Reverse().ToArray();
+			var buf = EndianBitConverter.BigEndian.GetBytes(ts.TotalSeconds);
 			stream.Write(buf, 0, buf.Length);
 		}
 	}

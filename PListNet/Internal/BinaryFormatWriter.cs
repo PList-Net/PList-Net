@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BitConverter;
 using PListNet.Nodes;
 
 namespace PListNet.Internal
@@ -64,10 +65,10 @@ namespace PListNet.Internal
 						buf = new [] { (byte) offsets[i] };
 						break;
 					case 2:
-						buf = BitConverter.GetBytes(EndianConverter.HostToNetworkOrder((short) offsets[i]));
+						buf = EndianBitConverter.BigEndian.GetBytes((short) offsets[i]);
 						break;
 					case 4:
-						buf = BitConverter.GetBytes(EndianConverter.HostToNetworkOrder(offsets[i]));
+						buf = EndianBitConverter.BigEndian.GetBytes(offsets[i]);
 						break;
 				}
 				stream.Write(buf, 0, buf.Length);
@@ -77,9 +78,9 @@ namespace PListNet.Internal
 			header[6] = offsetSize;
 			header[7] = nodeIndexSize;
 
-			BitConverter.GetBytes(EndianConverter.HostToNetworkOrder(nodeCount)).CopyTo(header, 12);
-			BitConverter.GetBytes(EndianConverter.HostToNetworkOrder(topOffestIdx)).CopyTo(header, 20);
-			BitConverter.GetBytes(EndianConverter.HostToNetworkOrder(offsetTableOffset)).CopyTo(header, 28);
+			EndianBitConverter.BigEndian.GetBytes(nodeCount).CopyTo(header, 12);
+			EndianBitConverter.BigEndian.GetBytes(topOffestIdx).CopyTo(header, 20);
+			EndianBitConverter.BigEndian.GetBytes(offsetTableOffset).CopyTo(header, 28);
 
 			stream.Write(header, 0, header.Length);
 		}
@@ -227,9 +228,9 @@ namespace PListNet.Internal
 				case 1:
 					return new [] { (byte) index };
 				case 2:
-					return BitConverter.GetBytes(EndianConverter.HostToNetworkOrder((short) index));
+					return EndianBitConverter.BigEndian.GetBytes((short) index);
 				case 4:
-					return BitConverter.GetBytes(EndianConverter.HostToNetworkOrder(index));
+					return EndianBitConverter.BigEndian.GetBytes(index);
 				default:
 					throw new PListFormatException("Invalid node index size");
 			}

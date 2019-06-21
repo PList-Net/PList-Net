@@ -9,7 +9,7 @@ namespace PListNet.Tests
 		[Test]
 		public void WhenParsingBinaryDocumentWithSingleDictionary_ThenItIsParsedCorrectly()
 		{
-			using (var stream = TestFileHelper.GetTestFileStream("TestFiles/asdf-Info.bin.plist"))
+			using (var stream = TestFileHelper.GetTestFileStream("TestFiles/asdf-Info-bin.plist"))
 			{
 				var node = PList.Load(stream);
 
@@ -72,5 +72,45 @@ namespace PListNet.Tests
 	            }
 	        }
 	    }
-    }
+
+		[Test]
+		public void ReadingFile_GitHub_Issue15_FailReadingLargeDictionary()
+		{
+			using (var stream = TestFileHelper.GetTestFileStream("TestFiles/github-15-medium-binary.plist"))
+			{
+				try
+				{
+					var node = PList.Load(stream);
+
+					var dictNode = node as DictionaryNode;
+					Assert.IsNotNull(dictNode);
+					Assert.AreEqual(16384, dictNode.Keys.Count);
+				}
+				catch (PListFormatException ex)
+				{
+					Assert.Fail(ex.Message);
+				}
+			}
+		}
+
+		[Test]
+		public void ReadingFile_GitHub_Issue15_FailReadingLargeArray()
+		{
+			using (var stream = TestFileHelper.GetTestFileStream("TestFiles/github-15-large-binary.plist"))
+			{
+				try
+				{
+					var node = PList.Load(stream);
+
+					var dictNode = node as DictionaryNode;
+					Assert.IsNotNull(dictNode);
+					Assert.AreEqual(32768, dictNode.Keys.Count);
+				}
+				catch (PListFormatException ex)
+				{
+					Assert.Fail(ex.Message);
+				}
+			}
+		}
+	}
 }

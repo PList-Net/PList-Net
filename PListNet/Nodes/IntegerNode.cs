@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
-using PListNet.Internal;
+using BitConverter;
 
 namespace PListNet.Nodes
 {
@@ -100,13 +100,13 @@ namespace PListNet.Nodes
 					Value = buf[0];
 					break;
 				case 1:
-					Value = EndianConverter.NetworkToHostOrder(BitConverter.ToInt16(buf, 0));
+					Value = EndianBitConverter.BigEndian.ToInt16(buf, 0);
 					break;
 				case 2:
-					Value = EndianConverter.NetworkToHostOrder(BitConverter.ToInt32(buf, 0));
+					Value = EndianBitConverter.BigEndian.ToInt32(buf, 0);
 					break;
 				case 3:
-					Value = EndianConverter.NetworkToHostOrder(BitConverter.ToInt64(buf, 0));
+					Value = EndianBitConverter.BigEndian.ToInt64(buf, 0);
 					break;
 				default:
 					throw new PListFormatException("Int > 64Bit");
@@ -122,16 +122,16 @@ namespace PListNet.Nodes
             switch (BinaryLength)
             {
                 case 0:
-                    buf = new[] { (byte)Value };
+                    buf = new[] { (byte) Value };
                     break;
                 case 1:
-                    buf = BitConverter.GetBytes(EndianConverter.HostToNetworkOrder((short)Value));
+                    buf = EndianBitConverter.BigEndian.GetBytes((short) Value);
                     break;
                 case 2:
-                    buf = BitConverter.GetBytes(EndianConverter.HostToNetworkOrder((int)Value));
+                    buf = EndianBitConverter.BigEndian.GetBytes((int) Value);
                     break;
                 case 3:
-                    buf = BitConverter.GetBytes(EndianConverter.HostToNetworkOrder(Value));
+                    buf = EndianBitConverter.BigEndian.GetBytes(Value);
                     break;
                 
                 default:
