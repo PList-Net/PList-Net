@@ -227,7 +227,7 @@ namespace PListNet.Internal
 
 		private void ReadInArray(ICollection<PNode> node, int nodeLength, ReaderState readerState)
 		{
-			var buf = new byte[nodeLength * readerState.OffsetIntSize];
+			var buf = new byte[nodeLength * readerState.ObjectRefSize];
 			if (readerState.Stream.Read(buf, 0, buf.Length) != buf.Length)
 			{
 				throw new PListFormatException();
@@ -235,17 +235,15 @@ namespace PListNet.Internal
 
 			for (var i = 0; i < nodeLength; i++)
 			{
-				var topNode = readerState.OffsetIntSize == 1
-					? buf[i]
-					: EndianBitConverter.BigEndian.ToInt16(buf, (int) (2 * i));
-				node.Add(ReadInternal(readerState, (ulong) topNode));
+                var topNode = GetNodeOffset(readerState, buf, i);
+				node.Add(ReadInternal(readerState, topNode));
 			}
 		}
 
 		private void ReadInDictionary(IDictionary<string, PNode> node, int nodeLength, ReaderState readerState)
 		{
-			var bufKeys = new byte[nodeLength * readerState.OffsetIntSize];
-			var bufVals = new byte[nodeLength * readerState.OffsetIntSize];
+			var bufKeys = new byte[nodeLength * readerState.ObjectRefSize];
+			var bufVals = new byte[nodeLength * readerState.ObjectRefSize];
 
 			if (readerState.Stream.Read(bufKeys, 0, bufKeys.Length) != bufKeys.Length)
 			{
@@ -259,7 +257,7 @@ namespace PListNet.Internal
 
 			for (var i = 0; i < nodeLength; i++)
 			{
-				var topNode = GetNodeOffset(readerState, bufKeys, (int)i);
+				var topNode = GetNodeOffset(readerState, bufKeys, i);
 				var plKey = ReadInternal(readerState, topNode);
 
 				var stringKey = plKey as StringNode;
@@ -268,7 +266,7 @@ namespace PListNet.Internal
 					throw new PListFormatException("Key is not a string");
 				}
 
-				topNode = GetNodeOffset(readerState, bufVals, (int) i);
+				topNode = GetNodeOffset(readerState, bufVals, i);
 				var plVal = ReadInternal(readerState, topNode);
 
 				node.Add(stringKey.Value, plVal);
@@ -283,13 +281,13 @@ namespace PListNet.Internal
 					return bufKeys[index];
 
 				case 2:
-					return (ushort) EndianBitConverter.BigEndian.ToInt16(bufKeys, readerState.OffsetIntSize * index);
+					return EndianBitConverter.BigEndian.ToUInt16(bufKeys, readerState.ObjectRefSize * index);
 
 				case 4:
-					return (uint) EndianBitConverter.BigEndian.ToInt32(bufKeys, readerState.OffsetIntSize * index);
+					return EndianBitConverter.BigEndian.ToUInt32(bufKeys, readerState.ObjectRefSize * index);
 
 				case 8:
-					return (ulong) EndianBitConverter.BigEndian.ToInt64(bufKeys, readerState.OffsetIntSize * index);
+					return EndianBitConverter.BigEndian.ToUInt64(bufKeys, readerState.ObjectRefSize * index);
 			}
 
 			throw new PListFormatException("$Unexpected index size: {readerState.IndexSize}.");
