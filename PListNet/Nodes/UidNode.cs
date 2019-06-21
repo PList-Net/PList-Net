@@ -7,6 +7,8 @@ namespace PListNet.Nodes
     /// </summary>
     public class UidNode : IntegerNode
     {
+        private UInt64 _value;
+        
         internal override string XmlTag => "uid";
 
         internal override byte BinaryTag => 8;
@@ -18,7 +20,7 @@ namespace PListNet.Nodes
 
         internal override string ToXmlString()
         {
-            throw new NotImplementedException();
+            return $"<dict><key>CF$UID</key><integer>{_value}</integer></dict>";
         }
     }
 }
