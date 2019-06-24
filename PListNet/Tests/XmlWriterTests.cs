@@ -63,5 +63,28 @@ namespace PListNet.Tests
 				}
 			}
 		}
+
+		[Test]
+		public void WhenBooleanValueIsSaved_ThenThereIsNoWhiteSpace()
+		{
+			using (var outStream = new MemoryStream())
+			{
+				// create basic PList containing a boolean value
+				var node = new DictionaryNode();
+				node.Add("Test", new BooleanNode(true));
+
+				// save and reset stream
+				PList.Save(node, outStream, PListFormat.Xml);
+				outStream.Seek(0, SeekOrigin.Begin);
+
+				// check that boolean was written out without a space per spec (see also issue #11)
+				using (var reader = new StreamReader(outStream))
+				{
+					var contents = reader.ReadToEnd();
+
+					Assert.IsTrue(contents.Contains("<true/>"));
+				}
+			}
+		}
 	}
 }
