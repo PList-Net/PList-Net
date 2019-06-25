@@ -1,5 +1,10 @@
 ﻿# Change log
 
+## 3.0
+ - fixed a number of binary PList parsing bugs
+ - fixed writing of unicode strings in XML format
+ - converted to netstandard1.0
+
 ## 2.0.5
  - project cleanup (removed unused file)
 
