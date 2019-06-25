@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml;
 
 namespace PListNet.Nodes
 {
@@ -102,6 +103,15 @@ namespace PListNet.Nodes
 		internal override void Parse(string data)
 		{
 			Value = data;
+		}
+
+		internal override void WriteXml(XmlWriter writer)
+		{
+			// use "ustring" tag for single-byte and "ustring" for UTF-16 characters
+			var tag = IsUtf16 ? "ustring" : "string";
+			writer.WriteStartElement(tag);
+			writer.WriteValue(ToXmlString());
+			writer.WriteEndElement();
 		}
 
 		/// <summary>
