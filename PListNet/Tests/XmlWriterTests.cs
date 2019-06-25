@@ -86,5 +86,30 @@ namespace PListNet.Tests
 				}
 			}
 		}
+
+		[Test]
+		public void WhenStringContainsUnicode_ThenStringIsWrappedInUstringTag()
+		{
+			using (var outStream = new MemoryStream())
+			{
+				var utf16value = "😂test";
+
+				// create basic PList containing a boolean value
+				var node = new DictionaryNode();
+				node.Add("Test", new StringNode(utf16value));
+
+				// save and reset stream
+				PList.Save(node, outStream, PListFormat.Xml);
+				outStream.Seek(0, SeekOrigin.Begin);
+
+				// check that boolean was written out without a space per spec (see also issue #11)
+				using (var reader = new StreamReader(outStream))
+				{
+					var contents = reader.ReadToEnd();
+
+					Assert.IsTrue(contents.Contains($"<ustring>{utf16value}</ustring>"));
+				}
+			}
+		}
 	}
 }
