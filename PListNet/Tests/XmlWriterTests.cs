@@ -92,8 +92,7 @@ namespace PListNet.Tests
 		{
 			using (var outStream = new MemoryStream())
 			{
-				var utf16bytes = Encoding.Convert(Encoding.UTF8, Encoding.Unicode, Encoding.UTF8.GetBytes("test"));
-				var utf16value = Encoding.Unicode.GetString(utf16bytes);
+				var utf16value = "😂test";
 
 				// create basic PList containing a boolean value
 				var node = new DictionaryNode();
@@ -108,7 +107,7 @@ namespace PListNet.Tests
 				{
 					var contents = reader.ReadToEnd();
 
-					Assert.IsTrue(contents.Contains($"<ustring>{utf16value}</ustrng>"));
+					Assert.IsTrue(contents.Contains($"<ustring>{utf16value}</ustring>"));
 				}
 			}
 		}
