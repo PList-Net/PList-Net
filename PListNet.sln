@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 		Changes.md = Changes.md
-		PListNet\PListNet.nuspec = PListNet\PListNet.nuspec
 	EndProjectSection
 EndProject
 Global
@@ -42,5 +41,10 @@ Global
 		$2.scope = text/x-csharp
 		$0.CSharpFormattingPolicy = $3
 		$3.scope = text/x-csharp
+		$0.DotNetNamingPolicy = $4
+		$4.DirectoryNamespaceAssociation = PrefixedHierarchical
+		$0.VersionControlPolicy = $5
+		description = Read and write Apple .plist files.
+		version = 3.0.0.0
 	EndGlobalSection
 EndGlobal
