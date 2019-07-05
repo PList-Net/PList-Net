@@ -53,6 +53,8 @@
   <ItemGroup>
     <EmbeddedResource Include="TestFiles\github-9.plist" />
     <EmbeddedResource Include="TestFiles\empty-array.plist" />
+    <EmbeddedResource Include="TestFiles\github-7-binary.plist" />
+    <EmbeddedResource Include="TestFiles\github-7-xml.plist" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestFiles\github-15-medium-binary.plist" />

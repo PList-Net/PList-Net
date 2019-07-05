@@ -39,7 +39,24 @@ namespace PListNet.Tests
             }
         }
 
-	    [Test]
+		[Test]
+		public void WhenReadingUid_UidNodeIsParsed()
+		{
+			using (var stream = TestFileHelper.GetTestFileStream("TestFiles/github-7-xml.plist"))
+			{
+				try
+				{
+					var node = PList.Load(stream);
+					Assert.Pass();
+				}
+				catch (PListFormatException ex)
+				{
+					Assert.Fail(ex.Message);
+				}
+			}
+		}
+
+		[Test]
 	    public void ReadingFile_With_16bit_Integers_Fail()
 	    {
 	        using (var stream = TestFileHelper.GetTestFileStream("TestFiles/unity.binary.plist"))
