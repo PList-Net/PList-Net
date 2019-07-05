@@ -35,8 +35,8 @@ namespace PListNet
 			// rewind
 			stream.Seek(0, SeekOrigin.Begin);
 
-			// compare to known indicator
-			return Encoding.UTF8.GetString(buf, 0, buf.Length) == "bplist00";
+			// compare to known indicator (TODO: validate version as well)
+			return Encoding.UTF8.GetString(buf, 0, 6) == "bplist";
 		}
 
 		private static PNode LoadAsBinary(Stream stream)
