@@ -17,11 +17,9 @@ namespace PListNet.Nodes
 		{
 			get
 			{
-				if (Value >= byte.MinValue && Value <= byte.MaxValue) return 0;
-				if (Value >= ushort.MinValue && Value <= ushort.MaxValue) return 1;
-				if (Value >= uint.MinValue && Value <= uint.MaxValue) return 2;
-				if (Value >= ulong.MinValue && Value <= ulong.MaxValue) return 3;
-				return -1;
+				if (Value <= byte.MaxValue) return 0;
+				if (Value <= ushort.MaxValue) return 1;
+				return Value <= uint.MaxValue ? 2 : 3;
 			}
 		}
 
@@ -29,7 +27,7 @@ namespace PListNet.Nodes
 		/// Gets or sets the value of this element.
 		/// </summary>
 		/// <value>The value of this element.</value>
-		public override ulong Value { get; set; }
+		public sealed override ulong Value { get; set; }
 
 		/// <summary>
 		/// Create a new UID node.
