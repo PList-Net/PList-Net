@@ -80,6 +80,7 @@ namespace PListNet
 			{
 				var sets = new XmlWriterSettings
 					{
+                        // Apple Web Services require encoding being uppercase
 						Encoding = ExtendedEncoding.UpperCaseUTF8,
 						Indent = true,
 						IndentChars = "\t",
@@ -89,6 +90,8 @@ namespace PListNet
 				using (var xmlWriter = XmlWriter.Create(stream, sets))
 				{
 					xmlWriter.WriteStartDocument();
+                    // Apple Web Services will not handle requests if "Apple Computer" is not
+                    // replaced by just "Apple"
 					xmlWriter.WriteDocType("plist", "-//Apple//DTD PLIST 1.0//EN", "http://www.apple.com/DTDs/PropertyList-1.0.dtd", null);
 
 					// write out nodes, wrapped in plist root element
