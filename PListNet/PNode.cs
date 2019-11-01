@@ -57,9 +57,17 @@ namespace PListNet
 		/// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
 		internal override void ReadXml(XmlReader reader)
 		{
+            var isEmptyElement = reader.IsEmptyElement;
 			reader.ReadStartElement();
-			Parse(reader.ReadContentAsString());
-			reader.ReadEndElement();
+            if (!isEmptyElement)
+            {
+                Parse(reader.ReadContentAsString());
+                reader.ReadEndElement();
+            }
+            else
+            {
+                Parse(String.Empty);
+            }
 		}
 
 		/// <summary>
