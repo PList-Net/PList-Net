@@ -58,7 +58,7 @@ namespace PListNet
 		internal override void ReadXml(XmlReader reader)
 		{
             var isEmptyElement = reader.IsEmptyElement;
-			reader.ReadStartElement();
+            reader.ReadStartElement();
             if (!isEmptyElement)
             {
                 Parse(reader.ReadContentAsString());
