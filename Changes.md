@@ -1,5 +1,8 @@
 ﻿# Change log
 
+## 3.1
+ - fixed parsing of binary UID values
+
 ## 3.0
  - fixed a number of binary PList parsing bugs
  - fixed writing of unicode strings in XML format

@@ -1,16 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Version>3.0.0</Version>
+		<Version>3.1.0</Version>
 		<TargetFramework>netstandard1.0</TargetFramework>
 		<Description>.Net Library for working with Apple *.plist files.</Description>
-		<Copyright>Copyright © 2009-2019</Copyright>
-		<AssemblyVersion>3.0.0.0</AssemblyVersion>
+		<Copyright>Copyright © 2009-2020</Copyright>
+		<AssemblyVersion>3.1.0.0</AssemblyVersion>
 		<FileVersion>3.0.0.0</FileVersion>
 		<Authors>Vijay Santhanam, Christian Ecker, Michael Teper</Authors>
 		<PackageId>PListNet</PackageId>
 		<Product>PListNet</Product>
 		<Company>PListNet</Company>
 		<ReleaseVersion>3.0.0.0</ReleaseVersion>
+		<PackageProjectUrl>https://github.com/PList-Net/PList-Net</PackageProjectUrl>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/PList-Net/PList-Net.git</RepositoryUrl>
+		<PackageReleaseNotes>3.1.0: Fixed parsing of binary UID values.</PackageReleaseNotes>
 	</PropertyGroup>
 	<ItemGroup>
 	  <Compile Remove="Tests\**" />
