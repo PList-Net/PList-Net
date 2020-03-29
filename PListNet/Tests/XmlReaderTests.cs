@@ -89,5 +89,61 @@ namespace PListNet.Tests
                 Assert.AreEqual(0, array.Count);
             }
         }
-    }
+
+        [Test]
+        public void WhenDocumentContainsEmptyDictionary_ThenDocumentIsParsedCorrectly()
+        {
+	        using (var stream = TestFileHelper.GetTestFileStream("TestFiles/github-17.plist"))
+	        {
+		        var root = PList.Load(stream) as DictionaryNode;
+
+		        Assert.IsNotNull(root);
+		        Assert.AreEqual(4, root.Count);
+
+				// an empty dictionary in the root
+		        Assert.IsInstanceOf<DictionaryNode>(root["{}"]);
+		        var dict = root["{}"] as DictionaryNode;
+
+		        Assert.IsNotNull(dict);
+		        Assert.AreEqual(0, dict.Count);
+
+				// an empty dictionary that is nested
+				dict = root["{\"foo\":{\"bar\":{\"quux\":{}}}}"] as DictionaryNode;
+				Assert.IsNotNull(dict);
+
+				dict = dict["foo"] as DictionaryNode;
+				Assert.IsNotNull(dict);
+
+				dict = dict["bar"] as DictionaryNode;
+				Assert.IsNotNull(dict);
+
+				dict = dict["quux"] as DictionaryNode;
+				Assert.IsNotNull(dict);
+
+				Assert.AreEqual(0, dict.Count);
+	        }
+        }
+
+        [Test]
+        public void WhenDocumentContainsBooleans_ThenDocumentIsParsedCorrectly()
+        {
+	        using (var stream = TestFileHelper.GetTestFileStream("TestFiles/github-17-bools.plist"))
+	        {
+		        var root = PList.Load(stream) as DictionaryNode;
+
+		        Assert.IsNotNull(root);
+		        Assert.AreEqual(2, root.Count);
+
+		        // true node
+		        var node = root["foo"] as BooleanNode;
+		        Assert.IsNotNull(node);
+		        Assert.IsTrue(node.Value);
+
+		        // false node
+		        node = root["bar"] as BooleanNode;
+		        Assert.IsNotNull(node);
+		        Assert.IsFalse(node.Value);
+	        }
+        }
+	}
 }
