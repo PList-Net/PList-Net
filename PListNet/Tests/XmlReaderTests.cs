@@ -89,5 +89,22 @@ namespace PListNet.Tests
                 Assert.AreEqual(0, array.Count);
             }
         }
-    }
+
+		[Test]
+		public void WhenReadingUid_UidNodeIsParsed()
+		{
+			using (var stream = TestFileHelper.GetTestFileStream("TestFiles/github-7-xml.plist"))
+			{
+				try
+				{
+					var node = PList.Load(stream);
+					Assert.Pass();
+				}
+				catch (PListFormatException ex)
+				{
+					Assert.Fail(ex.Message);
+				}
+			}
+		}
+	}
 }
