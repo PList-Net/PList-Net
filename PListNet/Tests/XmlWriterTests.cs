@@ -89,6 +89,48 @@ namespace PListNet.Tests
 		}
 
 		[Test]
+		public void WhenXmlPlistWithBooleanValueIsLoadedAndSaved_ThenWhiteSpaceMatches()
+		{
+			using (var stream = TestFileHelper.GetTestFileStream("TestFiles/github-20.plist"))
+			{
+				// read in the source file and reset the stream so we can parse from it
+				string source;
+				using (var reader = new StreamReader(stream, Encoding.Default, true, 2048, true))
+				{
+					source = reader.ReadToEnd();
+				}
+				stream.Seek(0, SeekOrigin.Begin);
+
+				var root = PList.Load(stream) as DictionaryNode;
+				Assert.IsNotNull(root);
+
+				// verify that we parsed expected content
+				var node = root["ABool"] as BooleanNode;
+				Assert.IsNotNull(node);
+				Assert.IsTrue(node.Value);
+
+				// write the file out to memory and check that there is still no space
+				// in the written out boolean node
+				using (var outStream = new MemoryStream())
+				{
+					// save and reset stream
+					PList.Save(root, outStream, PListFormat.Xml);
+					outStream.Seek(0, SeekOrigin.Begin);
+
+					// check that boolean was written out without a space per spec (see also issue #11)
+					using (var reader = new StreamReader(outStream))
+					{
+						var contents = reader.ReadToEnd();
+
+						Assert.AreEqual(source, contents);
+						Assert.IsTrue(contents.Contains("<true/>"));
+					}
+				}
+
+			}
+		}
+
+		[Test]
 		public void WhenStringContainsUnicode_ThenStringIsWrappedInUstringTag()
 		{
 			using (var outStream = new MemoryStream())
