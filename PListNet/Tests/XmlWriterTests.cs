@@ -123,7 +123,6 @@ namespace PListNet.Tests
 						var contents = reader.ReadToEnd();
 
 						Assert.AreEqual(source, contents);
-						Assert.IsTrue(contents.Contains("<true/>"));
 					}
 				}
 

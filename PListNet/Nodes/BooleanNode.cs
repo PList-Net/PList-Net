@@ -64,7 +64,9 @@ namespace PListNet.Nodes
 		{
 			// writing value as raw because Apple's parser expects no
 			// space before the closing tag, and the XmlWrites inserts one
-			writer.WriteRaw($"<{ToXmlString()}/>");
+			//writer.WriteRaw($"<{ToXmlString()}/>");
+			writer.WriteStartElement(ToXmlString());
+			writer.WriteEndElement();
 		}
 
 		/// <summary>
