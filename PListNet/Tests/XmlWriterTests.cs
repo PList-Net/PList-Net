@@ -1,7 +1,7 @@
 ﻿using System.IO;
+using System.Text;
 using NUnit.Framework;
 using PListNet.Nodes;
-using System.Text;
 
 namespace PListNet.Tests
 {
@@ -9,7 +9,7 @@ namespace PListNet.Tests
 	public class XmlWriterTests
 	{
 		[Test]
-		public void WhenXmlFormatIsResavedAndOpened_ThenParsedDocumentMatchesTheOriginal()
+		public void WhenXmlFormatIsSavedAndOpened_ThenParsedDocumentMatchesTheOriginal()
 		{
 			using (var stream = TestFileHelper.GetTestFileStream("TestFiles/utf8-Info.plist"))
 			{
@@ -38,6 +38,8 @@ namespace PListNet.Tests
 					var oldDict = node as DictionaryNode;
 					var newDict = newNode as DictionaryNode;
 
+					Assert.NotNull(oldDict);
+					Assert.NotNull(newDict);
 					Assert.AreEqual(oldDict.Count, newDict.Count);
 
 					foreach (var key in oldDict.Keys)
@@ -70,8 +72,7 @@ namespace PListNet.Tests
 			using (var outStream = new MemoryStream())
 			{
 				// create basic PList containing a boolean value
-				var node = new DictionaryNode();
-				node.Add("Test", new BooleanNode(true));
+				var node = new DictionaryNode {{"Test", new BooleanNode(true)}};
 
 				// save and reset stream
 				PList.Save(node, outStream, PListFormat.Xml);
@@ -95,8 +96,7 @@ namespace PListNet.Tests
 				var utf16value = "😂test";
 
 				// create basic PList containing a boolean value
-				var node = new DictionaryNode();
-				node.Add("Test", new StringNode(utf16value));
+				var node = new DictionaryNode {{"Test", new StringNode(utf16value)}};
 
 				// save and reset stream
 				PList.Save(node, outStream, PListFormat.Xml);
