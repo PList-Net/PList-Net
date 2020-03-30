@@ -70,7 +70,7 @@ namespace PListNet.Nodes
 		/// <summary>
 		/// Parses the specified value from a given string, read from Xml.
 		/// </summary>
-		/// <param name="data">The string whis is parsed.</param>
+		/// <param name="data">The string which is parsed.</param>
 		internal override void Parse(string data)
 		{
 			Value = data == "true";
