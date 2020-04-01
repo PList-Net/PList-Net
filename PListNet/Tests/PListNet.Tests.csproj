@@ -84,6 +84,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <EmbeddedResource Include="TestFiles\github-7-binary-2.plist" />
+    <EmbeddedResource Include="TestFiles\github-20.plist" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="LICENSE.EndianBitConverter.txt" />

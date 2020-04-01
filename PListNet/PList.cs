@@ -78,26 +78,48 @@ namespace PListNet
 		{
 			if (format == PListFormat.Xml)
 			{
+				const string newLine = "\n";
+
 				var sets = new XmlWriterSettings
 					{
 						Encoding = Encoding.UTF8,
 						Indent = true,
 						IndentChars = "\t",
-						NewLineChars = "\n",
+						NewLineChars = newLine,
 					};
 
-				using (var xmlWriter = XmlWriter.Create(stream, sets))
+				using (var tmpStream = new MemoryStream())
 				{
-					xmlWriter.WriteStartDocument();
-					xmlWriter.WriteDocType("plist", "-//Apple Computer//DTD PLIST 1.0//EN", "http://www.apple.com/DTDs/PropertyList-1.0.dtd", null);
+					using (var xmlWriter = XmlWriter.Create(tmpStream, sets))
+					{
+						xmlWriter.WriteStartDocument();
+						xmlWriter.WriteDocType("plist", "-//Apple Computer//DTD PLIST 1.0//EN", "http://www.apple.com/DTDs/PropertyList-1.0.dtd", null);
 
-					// write out nodes, wrapped in plist root element
-					xmlWriter.WriteStartElement("plist");
-					xmlWriter.WriteAttributeString("version", "1.0");
-					rootNode.WriteXml(xmlWriter);
-					xmlWriter.WriteEndElement();
-					xmlWriter.Flush();
+						// write out nodes, wrapped in plist root element
+						xmlWriter.WriteStartElement("plist");
+						xmlWriter.WriteAttributeString("version", "1.0");
+						rootNode.WriteXml(xmlWriter);
+						xmlWriter.WriteEndElement();
+						xmlWriter.Flush();
+					}
+
+					// XmlWriter always inserts a space before element closing (e.g. <true />)
+					// whereas the Apple parser can't deal with the space and expects <true/>
+					tmpStream.Seek(0, SeekOrigin.Begin);
+					using (var reader = new StreamReader(tmpStream))
+					using (var writer = new StreamWriter(stream, Encoding.UTF8, 4096, true))
+					{
+						writer.NewLine = newLine;
+						for (var line = reader.ReadLine(); line != null; line = reader.ReadLine())
+						{
+							if (line.Trim() == "<true />") line = line.Replace("<true />", "<true/>");
+							if (line.Trim() == "<false />") line = line.Replace("<false />", "<false/>");
+
+							writer.WriteLine(line);
+						}
+					}
 				}
+
 			}
 			else
 			{
