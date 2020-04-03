@@ -15,11 +15,16 @@
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/PList-Net/PList-Net.git</RepositoryUrl>
 		<PackageReleaseNotes>3.2.0: Fixed writing of boolean values (addressed issue #20)</PackageReleaseNotes>
+		<PackageLicenseFile>LICENSE.MD</PackageLicenseFile>
 	</PropertyGroup>
 	<ItemGroup>
 	  <Compile Remove="Tests\**" />
 	  <EmbeddedResource Remove="Tests\**" />
 	  <None Remove="Tests\**" />
+	  <None Include="..\LICENSE.MD">
+	    <Pack>True</Pack>
+	    <PackagePath></PackagePath>
+	  </None>
 	</ItemGroup>
 	<ItemGroup>
 	  <None Remove="CreateNuGetPackage.cmd" />
