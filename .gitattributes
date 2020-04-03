@@ -1,0 +1,6 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# plist files (mainly in tests) should not be messed with
+# so we instruct git to consider them binary
+*.plist text=lf
