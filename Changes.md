@@ -1,5 +1,8 @@
 ﻿# Change log
 
+## 3.2
+ - fixed writing of boolean values (addressed issue #20)
+
 ## 3.1
  - fixed parsing of binary UID values
 
