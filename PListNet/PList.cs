@@ -74,7 +74,8 @@ namespace PListNet
 		/// <param name="rootNode">Root node of the PList structure.</param>
 		/// <param name="stream">The stream in which the PList is saves.</param>
 		/// <param name="format">The format of the PList (Binary/Xml).</param>
-		public static void Save(PNode rootNode, Stream stream, PListFormat format)
+		/// <param name="encoding">For Xml output, the character encoding to use; defaults to UTF8. ASCII is required for code-signing entitlements.</param>
+		public static void Save(PNode rootNode, Stream stream, PListFormat format, Encoding encoding = null)
 		{
 			if (format == PListFormat.Xml)
 			{
@@ -82,7 +83,7 @@ namespace PListNet
 
 				var sets = new XmlWriterSettings
 					{
-						Encoding = Encoding.UTF8,
+						Encoding = encoding ?? Encoding.UTF8,
 						Indent = true,
 						IndentChars = "\t",
 						NewLineChars = newLine,
@@ -107,7 +108,7 @@ namespace PListNet
 					// whereas the Apple parser can't deal with the space and expects <true/>
 					tmpStream.Seek(0, SeekOrigin.Begin);
 					using (var reader = new StreamReader(tmpStream))
-					using (var writer = new StreamWriter(stream, Encoding.UTF8, 4096, true))
+					using (var writer = new StreamWriter(stream, encoding ?? Encoding.UTF8, 4096, true))
 					{
 						writer.NewLine = newLine;
 						for (var line = reader.ReadLine(); line != null; line = reader.ReadLine())
